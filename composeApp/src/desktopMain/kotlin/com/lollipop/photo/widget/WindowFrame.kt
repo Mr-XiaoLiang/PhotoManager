@@ -25,13 +25,22 @@ import androidx.compose.ui.window.*
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.*
 
+@Stable
+interface WindowFrameScope {
+
+    val actionBarHeight: Dp
+
+}
+
 @Composable
 fun ApplicationScope.RoundWindow(
     title: String,
     enableCloseAction: Boolean = true,
     enableMinimizeAction: Boolean = true,
     enableMaximizeAction: Boolean = true,
-    content: @Composable () -> Unit
+    enableMenuAction: Boolean = false,
+    onMenuClick: () -> Unit = {},
+    content: @Composable WindowFrameScope.() -> Unit
 ) {
     val windowState = rememberWindowState()
     var isMaximized by remember { mutableStateOf(false) }
@@ -63,43 +72,71 @@ fun ApplicationScope.RoundWindow(
             enableCloseAction = enableCloseAction,
             enableMinimizeAction = enableMinimizeAction,
             enableMaximizeAction = enableMaximizeAction,
+            enableMenuAction = enableMenuAction,
+            onMenuClick = onMenuClick
         ) {
             content()
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WindowScope.WindowFrame(
     title: String,
     onExit: () -> Unit = {},
     onMinimize: () -> Unit = {},
     onMaximize: () -> Unit = {},
+    onMenuClick: () -> Unit = {},
     enableCloseAction: Boolean = true,
     enableMinimizeAction: Boolean = true,
     enableMaximizeAction: Boolean = true,
+    enableMenuAction: Boolean = false,
     isMaximized: Boolean = false,
     radius: Dp = 12.dp,
     actionBarHeight: Dp = 32.dp,
-    content: @Composable BoxScope.() -> Unit
+    fixInsets: Boolean = false,
+    menuIcon: Painter = painterResource(Res.drawable.window_action_menu_24),
+    content: @Composable WindowFrameScope.() -> Unit
 ) {
+
+    val actionSize = 24.dp
+    val menuButtonSize = if (actionBarHeight > actionSize) {
+        actionSize
+    } else {
+        actionBarHeight
+    }
+    val actionBarPadding = if (actionBarHeight > actionSize) {
+        (actionBarHeight - actionSize) / 2
+    } else {
+        0.dp
+    }
+
+    val windowInsets = if (fixInsets) {
+        actionBarHeight
+    } else {
+        0.dp
+    }
+
+    val windowScope = object : WindowFrameScope {
+        override val actionBarHeight: Dp = actionBarHeight
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
             .clip(shape = RoundedCornerShape(radius))
             .background(MaterialTheme.colors.background)
-            .padding(top = actionBarHeight)
+            .padding(top = windowInsets)
     ) {
-        content()
+        windowScope.content()
     }
 
     WindowDraggableArea {
         Row(
-            modifier = Modifier.fillMaxWidth().height(actionBarHeight),
+            modifier = Modifier.fillMaxWidth().height(actionBarHeight).padding(horizontal = actionBarPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             WindowActionWidget(
-                modifier = Modifier.padding(horizontal = (actionBarHeight - 24.dp) / 2),
                 onExit = onExit,
                 onMinimize = onMinimize,
                 onMaximize = onMaximize,
@@ -109,11 +146,23 @@ fun WindowScope.WindowFrame(
                 enableMaximizeAction = enableMaximizeAction
             )
             Text(
-                modifier = Modifier.padding(horizontal = 12.dp),
+                modifier = Modifier.weight(1F).padding(horizontal = 12.dp),
                 text = title,
                 fontSize = 18.sp,
                 color = MaterialTheme.colors.onBackground
             )
+
+            if (enableMenuAction) {
+                Icon(
+                    modifier = Modifier.width(menuButtonSize)
+                        .height(menuButtonSize)
+                        .onClick(onClick = onMenuClick),
+                    painter = menuIcon,
+                    contentDescription = "Close",
+                    tint = MaterialTheme.colors.onBackground
+                )
+            }
+
         }
     }
 
