@@ -1,15 +1,13 @@
 package com.lollipop.photo
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
 import com.lollipop.photo.widget.RoundWindow
 
 fun main() = application {
     RoundWindow(
         title = "PhotoManager",
+        actionBarWidth = 240.dp,
     ) {
         App()
     }

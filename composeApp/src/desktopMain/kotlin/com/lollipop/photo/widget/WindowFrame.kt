@@ -29,6 +29,7 @@ import photomanager.composeapp.generated.resources.*
 interface WindowFrameScope {
 
     val actionBarHeight: Dp
+    val actionBarWidth: Dp?
 
 }
 
@@ -39,6 +40,7 @@ fun ApplicationScope.RoundWindow(
     enableMinimizeAction: Boolean = true,
     enableMaximizeAction: Boolean = true,
     enableMenuAction: Boolean = false,
+    actionBarWidth: Dp? = null,
     onMenuClick: () -> Unit = {},
     content: @Composable WindowFrameScope.() -> Unit
 ) {
@@ -53,6 +55,7 @@ fun ApplicationScope.RoundWindow(
     ) {
         WindowFrame(
             title = title,
+            actionBarWidth = actionBarWidth,
             onExit = {
                 exitApplication()
             },
@@ -94,6 +97,7 @@ fun WindowScope.WindowFrame(
     enableMenuAction: Boolean = false,
     isMaximized: Boolean = false,
     radius: Dp = 12.dp,
+    actionBarWidth: Dp? = null,
     actionBarHeight: Dp = 32.dp,
     fixInsets: Boolean = false,
     menuIcon: Painter = painterResource(Res.drawable.window_action_menu_24),
@@ -118,8 +122,12 @@ fun WindowScope.WindowFrame(
         0.dp
     }
 
+    val actionBarHeightSize = actionBarHeight
+    val actionBarWidthSize = actionBarWidth
+
     val windowScope = object : WindowFrameScope {
-        override val actionBarHeight: Dp = actionBarHeight
+        override val actionBarHeight: Dp = actionBarHeightSize
+        override val actionBarWidth: Dp? = actionBarWidthSize
     }
 
     Box(
@@ -132,8 +140,13 @@ fun WindowScope.WindowFrame(
     }
 
     WindowDraggableArea {
+        val actionBarModifier = if (actionBarWidth != null) {
+            Modifier.width(actionBarWidth)
+        } else {
+            Modifier.fillMaxWidth()
+        }
         Row(
-            modifier = Modifier.fillMaxWidth().height(actionBarHeight).padding(horizontal = actionBarPadding),
+            modifier = actionBarModifier.height(actionBarHeight).padding(horizontal = actionBarPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             WindowActionWidget(

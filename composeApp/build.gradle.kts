@@ -23,9 +23,8 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            // https://mvnrepository.com/artifact/org.json/json
+            implementation("org.json:json:20250517")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
