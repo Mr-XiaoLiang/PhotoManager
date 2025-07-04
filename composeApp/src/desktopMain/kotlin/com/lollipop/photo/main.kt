@@ -2,7 +2,9 @@ package com.lollipop.photo
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.Card
@@ -32,7 +34,7 @@ fun main() = application {
     var isPointerHold by remember { mutableStateOf(false) }
     val windowControllerElevation by animateDpAsState(
         targetValue = if (isPointerHold) {
-            8.dp
+            12.dp
         } else {
             0.dp
         },
@@ -63,7 +65,12 @@ fun main() = application {
                         ) {
                             AppWindowActionWidget(windowState = windowState)
                             if (isPointerHold) {
-                                Text(text = titleState, modifier = Modifier.padding(horizontal = 8.dp))
+                                Text(
+                                    text = titleState,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                        .horizontalScroll(rememberScrollState()),
+                                    maxLines = 1,
+                                )
                             }
                         }
                     }

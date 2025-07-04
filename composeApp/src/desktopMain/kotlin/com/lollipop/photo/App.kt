@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.widget.ContentBox
 import com.lollipop.photo.widget.ContentMenuIcon
 import com.lollipop.photo.widget.WindowActionWidget
@@ -69,7 +70,10 @@ fun App(actionBarHeight: Dp) {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Button(onClick = { showContent = !showContent }) {
+                Button(onClick = {
+                    WindowStateController.updateTitle("Hello World！！！Hello World！！！Hello World！！！Hello World！！！Hello World！！！Hello World！！！Hello World！！！")
+                    showContent = !showContent
+                }) {
                     Text("Click me!")
                 }
                 AnimatedVisibility(showContent) {

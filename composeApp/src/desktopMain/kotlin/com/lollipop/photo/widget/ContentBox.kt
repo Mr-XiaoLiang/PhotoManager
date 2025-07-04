@@ -39,7 +39,7 @@ fun ContentBox(
             ) {
                 Card(
                     modifier = Modifier,
-                    elevation = 8.dp,
+                    elevation = 6.dp,
                     backgroundColor = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(menuButtonSize / 2)
                 ) {
@@ -66,7 +66,6 @@ fun ContentBox(
                                         },
                                         painter = painterResource(Res.drawable.window_action_menu_24),
                                         contentDescription = "Menu",
-                                        wider = true
                                     )
                                 }
                             }
