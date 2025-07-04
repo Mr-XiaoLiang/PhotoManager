@@ -1,6 +1,5 @@
 package com.lollipop.photo
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
@@ -16,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
@@ -40,36 +38,37 @@ fun main() = application {
         },
     )
     RoundWindow { windowState ->
-        App(actionBarHeight)
-        Box(
-            modifier = Modifier.fillMaxWidth().height(actionBarHeight).padding(horizontal = actionBarMargin),
-            contentAlignment = Alignment.CenterStart
-        ) {
-
-            WindowDraggableArea(
-                modifier = Modifier.height(dragAreaHeight)
-                    .onPointerEvent(PointerEventType.Enter) { isPointerHold = true }
-                    .onPointerEvent(PointerEventType.Exit) { isPointerHold = false }
+        MaterialTheme {
+            App(actionBarHeight)
+            Box(
+                modifier = Modifier.fillMaxWidth().height(actionBarHeight).padding(horizontal = actionBarMargin),
+                contentAlignment = Alignment.CenterStart
             ) {
-                Card(
-                    elevation = windowControllerElevation,
-                    backgroundColor = MaterialTheme.colors.surface,
-                    shape = RoundedCornerShape(dragAreaHeight)
+
+                WindowDraggableArea(
+                    modifier = Modifier.height(dragAreaHeight)
+                        .onPointerEvent(PointerEventType.Enter) { isPointerHold = true }
+                        .onPointerEvent(PointerEventType.Exit) { isPointerHold = false }
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                            .fillMaxHeight()
-                            .animateContentSize(),
-                        verticalAlignment = Alignment.CenterVertically
+                    Card(
+                        elevation = windowControllerElevation,
+                        backgroundColor = MaterialTheme.colors.surface,
+                        shape = RoundedCornerShape(dragAreaHeight)
                     ) {
-                        AppWindowActionWidget(windowState = windowState)
-                        if (isPointerHold) {
-                            Text(text = titleState, modifier = Modifier.padding(horizontal = 8.dp))
+                        Row(
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                                .fillMaxHeight()
+                                .animateContentSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            AppWindowActionWidget(windowState = windowState)
+                            if (isPointerHold) {
+                                Text(text = titleState, modifier = Modifier.padding(horizontal = 8.dp))
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 }
