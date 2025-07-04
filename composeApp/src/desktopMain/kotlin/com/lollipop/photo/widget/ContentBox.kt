@@ -22,17 +22,17 @@ import photomanager.composeapp.generated.resources.window_action_menu_24
 @Composable
 fun ContentBox(
     modifier: Modifier = Modifier,
-    menuBar: @Composable (RowScope.() -> Unit)? = null,
+    menuBar: @Composable (RowScope.(callExpand: () -> Unit) -> Unit)? = null,
     menuPanel: @Composable (BoxScope.(callClose: () -> Unit) -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
     val menuButtonSize = 32.dp
     val isShowMore = menuPanel != null
-    val isShowMenu = menuBar != null || isShowMore
+    val isShowMenu = menuBar != null
     Box(modifier) {
         content()
-        if (isShowMenu) {
+        if (isShowMenu || isShowMore) {
             Box(
                 modifier.fillMaxSize().padding(8.dp),
                 contentAlignment = Alignment.TopEnd
@@ -58,11 +58,14 @@ fun ContentBox(
                                 modifier = Modifier.height(menuButtonSize),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                menuBar?.invoke(this)
-                                if (isShowMore) {
+                                if (isShowMenu) {
+                                    menuBar {
+                                        isMenuExpanded = true
+                                    }
+                                } else {
                                     ContentMenuIcon(
                                         onClick = {
-                                            isMenuExpanded = !isMenuExpanded
+                                            isMenuExpanded = true
                                         },
                                         painter = painterResource(Res.drawable.window_action_menu_24),
                                         contentDescription = "Menu",

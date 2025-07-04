@@ -33,23 +33,23 @@ fun App(actionBarHeight: Dp) {
         }
         ContentBox(
             modifier = Modifier.fillMaxSize(),
-            menuBar = {
-                ContentMenuIcon(
-                    onClick = {},
-                    painter = painterResource(Res.drawable.window_action_floating_24),
-                    contentDescription = "Close",
-                )
-                ContentMenuIcon(
-                    onClick = {},
-                    painter = painterResource(Res.drawable.window_action_maximize_24),
-                    contentDescription = "Close",
-                )
-                ContentMenuIcon(
-                    onClick = {},
-                    painter = painterResource(Res.drawable.window_action_minimize_24),
-                    contentDescription = "Close",
-                )
-            },
+//            menuBar = { callExpand ->
+//                ContentMenuIcon(
+//                    onClick = { callExpand() },
+//                    painter = painterResource(Res.drawable.window_action_floating_24),
+//                    contentDescription = "Close",
+//                )
+//                ContentMenuIcon(
+//                    onClick = {},
+//                    painter = painterResource(Res.drawable.window_action_maximize_24),
+//                    contentDescription = "Close",
+//                )
+//                ContentMenuIcon(
+//                    onClick = {},
+//                    painter = painterResource(Res.drawable.window_action_minimize_24),
+//                    contentDescription = "Close",
+//                )
+//            },
             menuPanel = { callClose ->
                 Box(modifier = Modifier.width(240.dp).height(240.dp)) {
                     ContentMenuIcon(
