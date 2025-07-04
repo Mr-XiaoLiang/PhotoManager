@@ -97,14 +97,15 @@ object FileHelper {
                 rememberFileChooserDir(it)
             }
             val files = chooser.selectedFiles?.map { it.path }
-            if (files != null && files.isNotEmpty()) {
-                addAllFile(files)
-                return
-            }
-            val file = chooser.selectedFile
-            if (file != null && file.exists()) {
-                addAllFile(file.path)
-            }
+            // TODO
+//            if (files != null && files.isNotEmpty()) {
+//                addAllFile(files)
+//                return
+//            }
+//            val file = chooser.selectedFile
+//            if (file != null && file.exists()) {
+//                addAllFile(file.path)
+//            }
         }
     }
 
@@ -200,7 +201,7 @@ object FileHelper {
 
     private fun loadFolderInfo(folder: PhotoFolder) {
         val dir = folder.dir
-        TODO
+        // TODO
     }
 
     fun interface PhotoFolderConfigListener {

@@ -9,21 +9,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lollipop.photo.widget.WindowActionWidget
-import com.lollipop.photo.widget.WindowFrameScope
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun WindowFrameScope.App() {
+fun App(actionBarHeight: Dp) {
     MaterialTheme {
 
         Row(
             modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight().width(actionBarWidth ?: 240.dp)
+                modifier = Modifier.fillMaxHeight().width(240.dp)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
 
