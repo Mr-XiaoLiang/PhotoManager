@@ -3,6 +3,9 @@ package com.lollipop.photo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -10,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.lollipop.photo.data.Photo
+import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.widget.ContentBox
 import com.lollipop.photo.widget.ContentMenuIcon
@@ -22,6 +27,7 @@ fun ContentPanel(
     topInsets: Dp
 ) {
     val isDrawerExpand by remember { WindowStateController.drawerExpand }
+    val photoList = remember { PhotoManager.photoList }
     ContentBox(
         modifier = modifier,
         menuBar = { callExpand ->
@@ -58,6 +64,33 @@ fun ContentPanel(
             }
         }
     ) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 128.dp)
+        ) {
+            items(photoList) { photo ->
+                PhotoItem(photo)
+            }
+        }
     }
-    // TODO
+}
+
+@Composable
+fun PhotoItem(photo: Photo) {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .aspectRatio(1f)
+//            .background(Color.Black)
+//    ) {
+//        Image(
+//            painter = painterResource(photo.preview),
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier.fillMaxSize()
+//        )
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//        )
+//    }
 }
