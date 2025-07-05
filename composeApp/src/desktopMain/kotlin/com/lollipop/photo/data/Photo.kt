@@ -39,6 +39,15 @@ class PhotoFile(
         getSizeString(size)
     }
 
+    val suffix by lazy {
+        PhotoSuffix.findByKey(file.extension)
+    }
+
+    val suffixIndex: Int
+        get() {
+            return suffix?.ordinal ?: -1
+        }
+
     private fun getSizeString(size: Long): String {
         val unit = arrayOf("B", "KB", "MB", "GB", "TB")
         val sizeStep = 1000

@@ -34,7 +34,7 @@ fun ContentBox(
         content()
         if (isShowMenu || isShowMore) {
             Box(
-                modifier.fillMaxSize().padding(8.dp),
+                modifier = Modifier.fillMaxSize().padding(8.dp),
                 contentAlignment = Alignment.TopEnd
             ) {
                 Card(

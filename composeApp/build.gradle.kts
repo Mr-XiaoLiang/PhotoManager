@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             // https://mvnrepository.com/artifact/org.json/json
             implementation("org.json:json:20250517")
+            implementation("io.coil-kt.coil3:coil-compose:3.0.4")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
