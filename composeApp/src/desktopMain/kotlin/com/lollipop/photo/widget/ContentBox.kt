@@ -8,12 +8,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.Res
 import photomanager.composeapp.generated.resources.window_action_menu_24
@@ -112,3 +114,46 @@ fun ContentMenuIcon(
         tint = MaterialTheme.colors.onSurface
     )
 }
+
+@Composable
+fun ColumnMenu(
+    modifier: Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ColumnMenuButton(
+    modifier: Modifier = Modifier,
+    painter: Painter? = null,
+    label: String = "",
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier.onClick(onClick = onClick).defaultMinSize(minHeight = 32.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (painter != null) {
+            Icon(
+                painter = painter,
+                contentDescription = label,
+                modifier = Modifier.width(24.dp).height(24.dp)
+            )
+        } else {
+            Spacer(modifier = Modifier.width(24.dp).height(24.dp))
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            modifier = Modifier.weight(1F),
+            fontSize = 16.sp
+        )
+    }
+}
+

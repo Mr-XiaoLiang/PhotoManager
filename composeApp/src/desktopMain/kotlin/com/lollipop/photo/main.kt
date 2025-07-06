@@ -21,12 +21,16 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
+import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.widget.AppWindowActionWidget
 import com.lollipop.photo.widget.RoundWindow
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() = application {
+
+    PhotoManager.init()
+
     val dragAreaHeight = 32.dp
     val actionBarHeight = dragAreaHeight + 12.dp
     val actionBarMargin = 6.dp

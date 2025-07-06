@@ -109,7 +109,8 @@ enum class PhotoSuffix(val key: String) {
 
     companion object {
         fun findByKey(key: String): PhotoSuffix? {
-            return entries.firstOrNull { it.key == key }
+            val keyLowerCase = key.lowercase()
+            return entries.firstOrNull { it.key == keyLowerCase }
         }
 
         val keySet: Set<String> by lazy {

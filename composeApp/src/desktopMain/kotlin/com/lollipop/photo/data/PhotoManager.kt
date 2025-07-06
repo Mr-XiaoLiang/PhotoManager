@@ -2,6 +2,7 @@ package com.lollipop.photo.data
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.lollipop.photo.state.WindowStateController
 import java.io.File
 
 object PhotoManager {
@@ -58,16 +59,19 @@ object PhotoManager {
         if (selectedFolder.value === folder) {
             selectedFolder(followFolderList.firstOrNull() ?: defaultFolderList.firstOrNull())
         }
+        saveDirList()
     }
 
     fun followFolder(folder: PhotoFolder) {
         followFolderList.add(folder)
         defaultFolderList.remove(folder)
+        saveDirList()
     }
 
     fun unfollowFolder(folder: PhotoFolder) {
         defaultFolderList.add(folder)
         followFolderList.remove(folder)
+        saveDirList()
     }
 
     fun selectedFolder(folder: PhotoFolder?) {
@@ -76,6 +80,7 @@ object PhotoManager {
         folder?.let {
             photoList.addAll(it.photoList)
         }
+        WindowStateController.updateTitle(folder?.path ?: "")
     }
 
 }
