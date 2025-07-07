@@ -39,17 +39,17 @@ fun WindowActionWidget(
     floatingIcon: Painter? = painterResource(Res.drawable.window_action_floating_24),
     disableColor: Color = Color(0xDD9A9A9A.toInt()),
     closeColor: Color = Color(0xFFE04040.toInt()),
-    closeIconColor: Color = Color(0xFFB13636.toInt()),
+    closeIconColor: Color = Color(0xFF555555.toInt()),
     minimizeColor: Color = Color(0xFFD9C539.toInt()),
-    minimizeIconColor: Color = Color(0xFFB6A632.toInt()),
+    minimizeIconColor: Color = Color(0xFF555555.toInt()),
     maximizeColor: Color = Color(0xFF3AD38D.toInt()),
-    maximizeIconColor: Color = Color(0xFF2FAA72.toInt()),
+    maximizeIconColor: Color = Color(0xFF555555.toInt()),
     enableCloseAction: Boolean = true,
     enableMinimizeAction: Boolean = true,
     enableMaximizeAction: Boolean = true,
 ) {
 
-    val iconSize = 24.dp
+    val iconSize = 22.dp
     val iconPadding = 4.dp
     val iconInsets = 2.dp
 
@@ -119,7 +119,7 @@ fun WindowActionWidget(
             tint = minimizeIconTint
         )
 
-        val maximizeIconPainter = if (isMaximized || floatingIcon == null) {
+        val maximizeIconPainter = if (!isMaximized || floatingIcon == null) {
             maximizeIcon
         } else {
             floatingIcon

@@ -9,11 +9,13 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
@@ -89,6 +91,7 @@ fun ContentMenuIcon(
     painter: Painter,
     contentDescription: String = "",
     wider: Boolean = false,
+    light: Boolean = false,
     onClick: () -> Unit,
 ) {
     val menuButtonHeight = 32.dp
@@ -97,22 +100,31 @@ fun ContentMenuIcon(
     } else {
         menuButtonHeight
     }
-    Icon(
+    val tint = if (light) {
+        MaterialTheme.colors.secondary
+    } else {
+        MaterialTheme.colors.onSurface
+    }
+    IconButton(
         modifier = modifier.width(menuButtonWidth)
-            .height(menuButtonHeight)
-            .onClick(onClick = onClick)
-            .padding(
-                vertical = 4.dp,
-                horizontal = if (wider) {
-                    8.dp
-                } else {
-                    4.dp
-                }
-            ),
-        painter = painter,
-        contentDescription = contentDescription,
-        tint = MaterialTheme.colors.onSurface
-    )
+            .height(menuButtonHeight),
+        onClick = onClick
+    ) {
+        Icon(
+            modifier = Modifier.fillMaxSize()
+                .padding(
+                    vertical = 4.dp,
+                    horizontal = if (wider) {
+                        8.dp
+                    } else {
+                        4.dp
+                    }
+                ),
+            painter = painter,
+            contentDescription = contentDescription,
+            tint = tint
+        )
+    }
 }
 
 @Composable
@@ -142,6 +154,36 @@ fun ColumnMenuButton(
         if (painter != null) {
             Icon(
                 painter = painter,
+                contentDescription = label,
+                modifier = Modifier.width(24.dp).height(24.dp)
+            )
+        } else {
+            Spacer(modifier = Modifier.width(24.dp).height(24.dp))
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            modifier = Modifier.weight(1F),
+            fontSize = 16.sp
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ColumnIconMenuButton(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector? = null,
+    label: String = "",
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier.onClick(onClick = onClick).defaultMinSize(minHeight = 32.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (imageVector != null) {
+            Icon(
+                imageVector = imageVector,
                 contentDescription = label,
                 modifier = Modifier.width(24.dp).height(24.dp)
             )
