@@ -9,6 +9,11 @@ object PreferencesHelper {
         Preferences.userRoot().node(this.javaClass.packageName)
     }
 
+    inline fun <reified T : Enum<*>> opt(key: String, def: T, find: (String) -> T?): T {
+        val name = opt(key, def.name)
+        return find(name) ?: def
+    }
+
     operator fun get(key: String): String? {
         return prefs.get(key, null)
     }

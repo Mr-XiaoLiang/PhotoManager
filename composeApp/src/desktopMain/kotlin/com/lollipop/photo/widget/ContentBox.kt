@@ -88,7 +88,8 @@ fun ContentBox(
 @Composable
 fun ContentMenuIcon(
     modifier: Modifier = Modifier,
-    painter: Painter,
+    painter: Painter? = null,
+    imageVector: ImageVector? = null,
     contentDescription: String = "",
     wider: Boolean = false,
     light: Boolean = false,
@@ -110,20 +111,37 @@ fun ContentMenuIcon(
             .height(menuButtonHeight),
         onClick = onClick
     ) {
-        Icon(
-            modifier = Modifier.fillMaxSize()
-                .padding(
-                    vertical = 4.dp,
-                    horizontal = if (wider) {
-                        8.dp
-                    } else {
-                        4.dp
-                    }
-                ),
-            painter = painter,
-            contentDescription = contentDescription,
-            tint = tint
-        )
+        if (painter != null) {
+            Icon(
+                modifier = Modifier.fillMaxSize()
+                    .padding(
+                        vertical = 4.dp,
+                        horizontal = if (wider) {
+                            8.dp
+                        } else {
+                            4.dp
+                        }
+                    ),
+                painter = painter,
+                contentDescription = contentDescription,
+                tint = tint
+            )
+        } else if (imageVector != null) {
+            Icon(
+                modifier = Modifier.fillMaxSize()
+                    .padding(
+                        vertical = 4.dp,
+                        horizontal = if (wider) {
+                            8.dp
+                        } else {
+                            4.dp
+                        }
+                    ),
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+                tint = tint
+            )
+        }
     }
 }
 

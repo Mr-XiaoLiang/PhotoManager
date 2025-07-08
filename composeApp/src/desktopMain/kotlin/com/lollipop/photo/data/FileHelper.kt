@@ -15,10 +15,6 @@ object FileHelper {
     private const val KEY_DEFAULT_LIST = "defaultList"
     private const val KEY_FOLDER_CONFIG = "folder.config"
 
-    private val executor by lazy {
-        Executors.newCachedThreadPool()
-    }
-
     private val userHomeDir by lazy {
         File(System.getProperty("user.home"))
     }
@@ -36,16 +32,6 @@ object FileHelper {
     }
 
     private var lastOpenDir: File? = null
-
-    private fun doAsync(block: () -> Unit) {
-        executor.execute {
-            try {
-                block()
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
-        }
-    }
 
     private fun fileChooserDir(): File {
         val last = lastOpenDir
@@ -232,8 +218,8 @@ object FileHelper {
             }
         }
 
-
         val photoList = folder.photoList
+        photoList.clear()
         photoMap.values.forEach { photoGroup ->
             var mainPhoto = photoGroup.firstOrNull()
             for (photo in photoGroup) {

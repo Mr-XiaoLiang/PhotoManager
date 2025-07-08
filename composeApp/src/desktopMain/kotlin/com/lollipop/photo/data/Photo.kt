@@ -17,6 +17,10 @@ class Photo(
 
     val compatriot = mutableListOf<PhotoFile>()
 
+    val groupCount: Int by lazy {
+        1 + compatriot.size
+    }
+
 }
 
 class PhotoFile(

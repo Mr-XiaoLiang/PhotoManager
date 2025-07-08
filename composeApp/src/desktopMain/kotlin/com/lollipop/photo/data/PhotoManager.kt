@@ -12,8 +12,8 @@ object PhotoManager {
     private val directorySet = mutableSetOf<String>()
     val selectedFolder = mutableStateOf<PhotoFolder?>(null)
     val photoList = SnapshotStateList<Photo>()
-    val sortType = mutableStateOf<SortType>(SortType.Time)
-    val sortMode = mutableStateOf<SortMode>(SortMode.Upward)
+    val sortType by lazy { mutableStateOf(Settings.sortType) }
+    val sortMode by lazy { mutableStateOf(Settings.sortMode) }
 
     private var isInit = false
 
@@ -79,42 +79,66 @@ object PhotoManager {
     fun selectedFolder(folder: PhotoFolder?) {
         selectedFolder.value = folder
         photoList.clear()
-        folder?.let {
-            photoList.addAll(it.photoList)
+        doAsync {
+            if (folder != null) {
+                photoList.addAll(sortPhotoList(folder.photoList))
+            }
         }
         WindowStateController.updateTitle(folder?.path ?: "")
     }
 
+    fun refreshCurrentFolder() {
+        val folder = selectedFolder.value ?: return
+        photoList.clear()
+        doAsync {
+            FileHelper.loadFolderInfo(folder)
+            photoList.addAll(sortPhotoList(folder.photoList))
+        }
+    }
+
     fun updateSortType(sortType: SortType) {
         this.sortType.value = sortType
-        // TODO
+        Settings.sortType = sortType
+        sortCurrentPhotoList()
     }
 
     fun updateSortMode(sortMode: SortMode) {
         this.sortMode.value = sortMode
-        // TODO
+        Settings.sortMode = sortMode
+        sortCurrentPhotoList()
     }
 
-    private fun sortPhotoList() {
+    private fun sortCurrentPhotoList() {
+        doAsync {
+            val list = sortPhotoList(photoList.toMutableList())
+            photoList.clear()
+            photoList.addAll(list)
+        }
+    }
+
+    private fun sortPhotoList(list: MutableList<Photo>): List<Photo> {
         val sortType = sortType.value
         val sortMode = sortMode.value
-        photoList.sortWith { o1, o2 ->
+        list.sortWith { o1, o2 ->
             when (sortType) {
                 SortType.Name -> {
                     when (sortMode) {
                         SortMode.Upward -> {
                             o1.name.compareTo(o2.name)
                         }
+
                         SortMode.Downward -> {
                             o2.name.compareTo(o1.name)
                         }
                     }
                 }
+
                 SortType.Time -> {
                     when (sortMode) {
                         SortMode.Upward -> {
                             o1.main.file.lastModified().compareTo(o2.main.file.lastModified())
                         }
+
                         SortMode.Downward -> {
                             o2.main.file.lastModified().compareTo(o1.main.file.lastModified())
                         }
@@ -122,6 +146,7 @@ object PhotoManager {
                 }
             }
         }
+        return list
     }
 
 }
