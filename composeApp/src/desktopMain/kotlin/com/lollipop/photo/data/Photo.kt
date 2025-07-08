@@ -21,11 +21,49 @@ class Photo(
         1 + compatriot.size
     }
 
+    val compatriotNames by lazy {
+        compatriot.joinToString(separator = ", ", transform = { it.name })
+    }
+
+    val sizeDisplay by lazy {
+        getAllSizeDisplay()
+    }
+
+    private fun getAllSizeDisplay(): String {
+        var sizeAll = main.size
+        for (compatriot in compatriot) {
+            sizeAll += compatriot.size
+        }
+        val builder = StringBuilder()
+        builder.append(PhotoFile.getSizeString(sizeAll))
+        builder.append(" = ")
+        builder.append(main.sizeValue)
+        for (compatriot in compatriot) {
+            builder.append(" + ")
+            builder.append(compatriot.sizeValue)
+        }
+        return builder.toString()
+    }
+
 }
 
 class PhotoFile(
     val file: File,
 ) {
+
+    companion object {
+        fun getSizeString(size: Long): String {
+            val unit = arrayOf("B", "KB", "MB", "GB", "TB")
+            val sizeStep = 1000
+            var index = 0
+            var fileSize = size.toDouble()
+            while (fileSize >= sizeStep) {
+                index++
+                fileSize /= sizeStep
+            }
+            return "%.2f %s".format(fileSize, unit[index])
+        }
+    }
 
     val path: String by lazy {
         file.path
@@ -51,18 +89,6 @@ class PhotoFile(
         get() {
             return suffix?.ordinal ?: -1
         }
-
-    private fun getSizeString(size: Long): String {
-        val unit = arrayOf("B", "KB", "MB", "GB", "TB")
-        val sizeStep = 1000
-        var index = 0
-        var fileSize = size.toDouble()
-        while (fileSize >= sizeStep) {
-            index++
-            fileSize /= sizeStep
-        }
-        return "%.2f %s".format(fileSize, unit[index])
-    }
 
 }
 

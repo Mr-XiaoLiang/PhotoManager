@@ -2,6 +2,7 @@ package com.lollipop.photo.state
 
 import androidx.compose.runtime.mutableStateOf
 import com.lollipop.photo.data.ContentDensityMode
+import com.lollipop.photo.data.Photo
 import com.lollipop.photo.data.Settings
 
 object UiController {
@@ -21,6 +22,10 @@ object UiController {
     fun updateContentDensityMode(mode: ContentDensityMode) {
         contentDensityMode.value = mode
         Settings.contentDensityMode = mode
+    }
+
+    fun openPhotoDetail(photo: Photo) {
+        // TODO
     }
 
 }

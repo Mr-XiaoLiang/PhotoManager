@@ -1,11 +1,15 @@
 package com.lollipop.photo
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -183,9 +187,75 @@ fun ContentPanel(
 
 @Composable
 private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: ContentDensityMode) {
-    // TODO
+    val previewSize = when (densityMode) {
+        ContentDensityMode.Less3 -> 32.dp
+        ContentDensityMode.Less2 -> 64.dp
+        ContentDensityMode.Less1 -> 128.dp
+        ContentDensityMode.Medium -> 256.dp
+        ContentDensityMode.More1 -> 380.dp
+        ContentDensityMode.More2 -> 420.dp
+        ContentDensityMode.More3 -> 480.dp
+    }
+    val lines = when (densityMode) {
+        ContentDensityMode.Less3 -> 1
+        ContentDensityMode.Less2 -> 2
+        ContentDensityMode.Less1 -> 3
+        else -> Int.MAX_VALUE
+    }
+    val backgroundA = MaterialTheme.colors.surface.copy(alpha = 0.05F)
+    val backgroundB = MaterialTheme.colors.primary.copy(alpha = 0.05F)
+    LazyColumn {
+        item(
+            key = "TopSpace",
+        ) {
+            Spacer(modifier = Modifier.height(topInsets))
+        }
+        itemsIndexed(items = photoList, key = { _, photo -> photo.preview }) { index, photo ->
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .background(
+                        if (index % 2 == 0) {
+                            backgroundA
+                        } else {
+                            backgroundB
+                        }
+                    ).padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PhotoImage(
+                    photo = photo,
+                    modifier = Modifier.width(previewSize).height(previewSize).clip(RoundedCornerShape(8.dp)),
+                )
+                Column(
+                    modifier = Modifier.weight(1F)
+                ) {
+                    Text(
+                        text = photo.name,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 18.sp
+                    )
+                    if (lines > 2) {
+                        Text(
+                            text = photo.compatriotNames,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            fontSize = 14.sp
+                        )
+                    }
+                    if (lines > 1) {
+                        Text(
+                            text = photo.sizeDisplay,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: ContentDensityMode) {
     val gridMinWidth = when (densityMode) {
@@ -198,7 +268,6 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
         ContentDensityMode.More3 -> 512.dp
     }
     LazyVerticalGrid(
-        modifier = Modifier,
         columns = GridCells.Adaptive(minSize = gridMinWidth)
     ) {
         item(
@@ -216,15 +285,15 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
                     .padding(all = 2.dp)
                     .aspectRatio(ratio)
                     .clip(shape = RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colors.background)
+                    .onClick {
+                        UiController.openPhotoDetail(photo)
+                    },
                 contentAlignment = Alignment.BottomCenter
             ) {
-
-                AsyncImage(
-                    model = photo.preview,
-                    contentDescription = null,
+                PhotoImage(
+                    photo = photo,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
                 )
                 Text(
                     text = photo.name,
@@ -253,3 +322,17 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
         }
     }
 }
+
+@Composable
+private fun PhotoImage(
+    photo: Photo,
+    modifier: Modifier
+) {
+    AsyncImage(
+        model = photo.preview,
+        contentDescription = photo.name,
+        modifier = modifier,
+        contentScale = ContentScale.Crop
+    )
+}
+
