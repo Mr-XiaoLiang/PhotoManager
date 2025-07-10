@@ -51,6 +51,7 @@ fun ContentPanel(
     val isGridMode by remember { UiController.gridMode }
     val contentDensityMode by remember { UiController.contentDensityMode }
     ContentBox(
+        topInsets = topInsets,
         modifier = modifier,
         menuBar = { callExpand ->
             if (isDrawerExpand) {
@@ -177,11 +178,11 @@ fun ContentPanel(
                 }
             }
         }
-    ) {
+    ) { contentTop ->
         if (isGridMode) {
-            GridPhotoPanel(photoList, topInsets, contentDensityMode)
+            GridPhotoPanel(photoList, contentTop, contentDensityMode)
         } else {
-            ListPhotoPanel(photoList, topInsets, contentDensityMode)
+            ListPhotoPanel(photoList, contentTop, contentDensityMode)
         }
     }
 }

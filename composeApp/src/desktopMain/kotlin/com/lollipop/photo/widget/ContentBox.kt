@@ -16,8 +16,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import com.lollipop.photo.state.WindowConfig
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.Res
 import photomanager.composeapp.generated.resources.window_action_menu_24
@@ -25,17 +28,18 @@ import photomanager.composeapp.generated.resources.window_action_menu_24
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ContentBox(
+    topInsets: Dp,
     modifier: Modifier = Modifier,
     menuBar: @Composable (RowScope.(callExpand: () -> Unit) -> Unit)? = null,
     menuPanel: @Composable (BoxScope.(callClose: () -> Unit) -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable (contentTop: Dp) -> Unit
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
-    val menuButtonSize = 32.dp
+    val menuButtonSize = WindowConfig.menuButtonHeight
     val isShowMore = menuPanel != null
     val isShowMenu = menuBar != null
     Box(modifier) {
-        content()
+        content(max(menuButtonSize, topInsets))
         if (isShowMenu || isShowMore) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(8.dp),
@@ -48,7 +52,7 @@ fun ContentBox(
                     shape = RoundedCornerShape(menuButtonSize / 2)
                 ) {
                     Box(
-                        modifier = Modifier.padding(horizontal = 4.dp)
+                        modifier = Modifier
                             .defaultMinSize(minWidth = menuButtonSize, minHeight = menuButtonSize)
                             .animateContentSize(),
                         contentAlignment = Alignment.TopEnd
@@ -91,16 +95,11 @@ fun ContentMenuIcon(
     painter: Painter? = null,
     imageVector: ImageVector? = null,
     contentDescription: String = "",
-    wider: Boolean = false,
     light: Boolean = false,
     onClick: () -> Unit,
 ) {
-    val menuButtonHeight = 32.dp
-    val menuButtonWidth = if (wider) {
-        menuButtonHeight + 8.dp
-    } else {
-        menuButtonHeight
-    }
+    val menuButtonHeight = WindowConfig.menuButtonHeight
+    val menuButtonWidth = menuButtonHeight
     val tint = if (light) {
         MaterialTheme.colors.secondary
     } else {
@@ -116,11 +115,7 @@ fun ContentMenuIcon(
                 modifier = Modifier.fillMaxSize()
                     .padding(
                         vertical = 4.dp,
-                        horizontal = if (wider) {
-                            8.dp
-                        } else {
-                            4.dp
-                        }
+                        horizontal = 4.dp
                     ),
                 painter = painter,
                 contentDescription = contentDescription,
@@ -131,11 +126,7 @@ fun ContentMenuIcon(
                 modifier = Modifier.fillMaxSize()
                     .padding(
                         vertical = 4.dp,
-                        horizontal = if (wider) {
-                            8.dp
-                        } else {
-                            4.dp
-                        }
+                        horizontal = 4.dp
                     ),
                 imageVector = imageVector,
                 contentDescription = contentDescription,

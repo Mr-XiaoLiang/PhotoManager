@@ -18,13 +18,43 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
 import com.lollipop.photo.state.WindowConfig
 import com.lollipop.photo.widget.AppWindowActionWidget
 import com.lollipop.photo.widget.RoundWindow
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
 fun AppWindow(
+    title: String,
+    callClose: () -> Unit,
+    content: @Composable (actionBarHeight: Dp) -> Unit
+) {
+    val isUseCustomWindow = WindowConfig.isUseCustomWindow
+    if (isUseCustomWindow) {
+        CustomAppWindow(title = title, callClose = callClose, content = content)
+    } else {
+        DefaultAppWindow(title = title, callClose = callClose, content = content)
+    }
+}
+
+@Composable
+private fun DefaultAppWindow(
+    title: String,
+    callClose: () -> Unit,
+    content: @Composable (actionBarHeight: Dp) -> Unit
+) {
+    Window(
+        onCloseRequest = callClose,
+        title = title
+    ) {
+        content(0.dp)
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun CustomAppWindow(
     title: String,
     callClose: () -> Unit,
     content: @Composable (actionBarHeight: Dp) -> Unit
@@ -50,6 +80,7 @@ fun AppWindow(
                 modifier = Modifier.fillMaxWidth().height(actionBarHeight).padding(horizontal = actionBarMargin),
                 contentAlignment = Alignment.CenterStart
             ) {
+//                val titleBar = remember { JBR.getWindowDecorations().createCustomTitleBar() }
                 WindowDraggableArea(
                     modifier = Modifier.height(dragAreaHeight)
                         .onPointerEvent(PointerEventType.Enter) { isPointerHold = true }
@@ -82,3 +113,4 @@ fun AppWindow(
         }
     }
 }
+

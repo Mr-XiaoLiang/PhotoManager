@@ -39,6 +39,7 @@ fun DrawerPanel(
     val defaultList = remember { PhotoManager.defaultFolderList }
     val selectedFolder by remember { PhotoManager.selectedFolder }
     ContentBox(
+        topInsets = topInsets,
         modifier = modifier,
         menuBar = {
             ContentMenuIcon(
@@ -50,7 +51,7 @@ fun DrawerPanel(
             )
         },
         menuPanel = null
-    ) {
+    ) { contentTop ->
 
         if (followList.isEmpty() && defaultList.isEmpty()) {
 
@@ -80,7 +81,7 @@ fun DrawerPanel(
                 ) {
 
                     items(1) {
-                        Spacer(modifier = Modifier.height(topInsets))
+                        Spacer(modifier = Modifier.height(contentTop))
                     }
 
                     items(followList) { folder ->
