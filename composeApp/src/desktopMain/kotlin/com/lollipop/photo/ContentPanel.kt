@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -29,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.lollipop.photo.data.*
 import com.lollipop.photo.state.UiController
 import com.lollipop.photo.state.WindowStateController
@@ -185,6 +186,7 @@ fun ContentPanel(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: ContentDensityMode) {
     val previewSize = when (densityMode) {
@@ -218,6 +220,10 @@ private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
                             backgroundA
                         } else {
                             backgroundB
+                        }
+                    ).onClick(
+                        onClick = {
+                            UiController.openPhotoDetail(photo)
                         }
                     ).padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -328,10 +334,20 @@ private fun PhotoImage(
     photo: Photo,
     modifier: Modifier
 ) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         model = photo.preview,
         contentDescription = photo.name,
         modifier = modifier,
+        loading = {
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(32.dp),
+                    color = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                )
+            }
+        },
         contentScale = ContentScale.Crop
     )
 }

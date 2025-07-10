@@ -26,6 +26,9 @@ kotlin {
             // https://mvnrepository.com/artifact/org.json/json
             implementation("org.json:json:20250517")
             implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+            // implementation("net.engawapg.lib:zoomable:2.8.1")
+            implementation("io.github.panpf.zoomimage:zoomimage-compose-coil3:1.4.0-beta02")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -43,6 +46,8 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.lollipop.photo"
             packageVersion = "1.0.0"
+
         }
+
     }
 }

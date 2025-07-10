@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
@@ -27,9 +28,6 @@ import com.lollipop.photo.data.PhotoFolder
 import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.widget.ContentBox
 import com.lollipop.photo.widget.ContentMenuIcon
-import org.jetbrains.compose.resources.painterResource
-import photomanager.composeapp.generated.resources.Res
-import photomanager.composeapp.generated.resources.icon_add_24
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +42,7 @@ fun DrawerPanel(
         modifier = modifier,
         menuBar = {
             ContentMenuIcon(
-                painter = painterResource(Res.drawable.icon_add_24),
+                imageVector = Icons.Filled.Add,
                 contentDescription = "添加",
                 onClick = {
                     PhotoManager.openFileChooser()
@@ -62,7 +60,7 @@ fun DrawerPanel(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.icon_add_24),
+                    imageVector = Icons.Filled.Add,
                     contentDescription = "添加",
                     modifier = Modifier.width(64.dp)
                         .height(64.dp)

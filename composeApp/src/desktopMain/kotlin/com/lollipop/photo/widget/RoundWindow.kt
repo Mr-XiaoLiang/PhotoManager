@@ -10,16 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.*
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowScope
+import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.rememberWindowState
 
 @Composable
-fun ApplicationScope.RoundWindow(
+fun RoundWindow(
     radius: Dp = 12.dp,
+    callClose: () -> Unit,
     content: @Composable WindowScope.(WindowState) -> Unit
 ) {
     val windowState = rememberWindowState()
     Window(
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = callClose,
         state = windowState,
         undecorated = true,
         transparent = true

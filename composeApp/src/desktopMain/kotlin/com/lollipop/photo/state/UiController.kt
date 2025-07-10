@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.lollipop.photo.data.ContentDensityMode
 import com.lollipop.photo.data.Photo
 import com.lollipop.photo.data.Settings
+import com.lollipop.photo.detail.PhotoDetailWindowManager
 
 object UiController {
 
@@ -25,7 +26,7 @@ object UiController {
     }
 
     fun openPhotoDetail(photo: Photo) {
-        // TODO
+        PhotoDetailWindowManager.open(photo)
     }
 
 }

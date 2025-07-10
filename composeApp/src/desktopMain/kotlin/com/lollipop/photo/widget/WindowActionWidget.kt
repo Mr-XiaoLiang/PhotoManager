@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import org.jetbrains.compose.resources.painterResource
@@ -143,9 +142,10 @@ fun WindowActionWidget(
 
 
 @Composable
-fun ApplicationScope.AppWindowActionWidget(
+fun AppWindowActionWidget(
     modifier: Modifier = Modifier,
     windowState: WindowState,
+    callClose: () -> Unit,
     enableCloseAction: Boolean = true,
     enableMinimizeAction: Boolean = true,
     enableMaximizeAction: Boolean = true,
@@ -155,9 +155,7 @@ fun ApplicationScope.AppWindowActionWidget(
     }
     WindowActionWidget(
         modifier = modifier,
-        onExit = {
-            exitApplication()
-        },
+        onExit = callClose,
         onMinimize = {
             windowState.isMinimized = true
         },
