@@ -39,7 +39,10 @@ fun ContentBox(
     val isShowMore = menuPanel != null
     val isShowMenu = menuBar != null
     Box(modifier) {
-        content(max(menuButtonSize, topInsets))
+        content(max(WindowConfig.menuBarHeight, topInsets))
+        if (isMenuExpanded) {
+            Box(modifier = Modifier.fillMaxSize().onClick(onClick = { isMenuExpanded = false }))
+        }
         if (isShowMenu || isShowMore) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(8.dp),

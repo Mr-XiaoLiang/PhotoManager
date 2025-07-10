@@ -9,6 +9,7 @@ object WindowConfig {
     val menuButtonHeight = 32.dp
     val dragAreaHeight = 32.dp
     val actionBarHeight = dragAreaHeight + 12.dp
+    val menuBarHeight = menuButtonHeight + 12.dp
     val actionBarMargin = 6.dp
 
     val keepOnBackground = mutableStateOf(false)

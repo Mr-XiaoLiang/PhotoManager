@@ -153,7 +153,7 @@ fun ContentPanel(
         },
         menuPanel = { callClose ->
             ColumnMenu(
-                modifier = Modifier.width(240.dp),
+                modifier = Modifier.width(320.dp).padding(horizontal = 12.dp, vertical = 12.dp),
             ) {
                 if (currentFolder != null) {
                     ContentDensityMenuWidget(
@@ -170,11 +170,6 @@ fun ContentPanel(
                             PhotoManager.removeFolder(it)
                         }
                     }
-                }
-                ColumnMenuButton(
-                    label = "关闭菜单"
-                ) {
-                    callClose()
                 }
             }
         }

@@ -43,7 +43,7 @@ private fun ApplicationScope.MainWindow() {
     val keepOnBackground by remember { WindowConfig.keepOnBackground }
     AppWindow(
         callClose = {
-            if (keepOnBackground) {
+            if (!keepOnBackground) {
                 exitApplication()
             }
         },
