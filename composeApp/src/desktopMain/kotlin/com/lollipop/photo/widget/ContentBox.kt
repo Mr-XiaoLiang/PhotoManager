@@ -2,6 +2,7 @@ package com.lollipop.photo.widget
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,11 +17,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.lollipop.photo.state.WindowConfig
+import com.lollipop.photo.values.StringsKey
+import com.lollipop.photo.values.rememberLanguage
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.Res
 import photomanager.composeapp.generated.resources.window_action_menu_24
@@ -79,7 +83,7 @@ fun ContentBox(
                                             isMenuExpanded = true
                                         },
                                         painter = painterResource(Res.drawable.window_action_menu_24),
-                                        contentDescription = "Menu",
+                                        contentDescription = StringsKey.Menu,
                                     )
                                 }
                             }
@@ -97,7 +101,7 @@ fun ContentMenuIcon(
     modifier: Modifier = Modifier,
     painter: Painter? = null,
     imageVector: ImageVector? = null,
-    contentDescription: String = "",
+    contentDescription: StringsKey = StringsKey.NONE,
     light: Boolean = false,
     onClick: () -> Unit,
 ) {
@@ -114,6 +118,7 @@ fun ContentMenuIcon(
         onClick = onClick
     ) {
         if (painter != null) {
+            val labelValue by rememberLanguage(contentDescription)
             Icon(
                 modifier = Modifier.fillMaxSize()
                     .padding(
@@ -121,10 +126,11 @@ fun ContentMenuIcon(
                         horizontal = 4.dp
                     ),
                 painter = painter,
-                contentDescription = contentDescription,
+                contentDescription = labelValue,
                 tint = tint
             )
         } else if (imageVector != null) {
+            val labelValue by rememberLanguage(contentDescription)
             Icon(
                 modifier = Modifier.fillMaxSize()
                     .padding(
@@ -132,7 +138,7 @@ fun ContentMenuIcon(
                         horizontal = 4.dp
                     ),
                 imageVector = imageVector,
-                contentDescription = contentDescription,
+                contentDescription = labelValue,
                 tint = tint
             )
         }
@@ -153,20 +159,34 @@ fun ColumnMenu(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ColumnMenuButton(
+fun ColumnIconMenuButton(
     modifier: Modifier = Modifier,
     painter: Painter? = null,
-    label: String = "",
+    imageVector: ImageVector? = null,
+    label: StringsKey = StringsKey.NONE,
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier.onClick(onClick = onClick).defaultMinSize(minHeight = 32.dp),
+        modifier = modifier.padding(all = 2.dp)
+            .background(
+                color = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
+                shape = RoundedCornerShape(8.dp)
+            ).onClick(onClick = onClick)
+            .padding(vertical = 4.dp)
+            .defaultMinSize(minHeight = 32.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (painter != null) {
+        val labelValue by rememberLanguage(label)
+        if (imageVector != null) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = labelValue,
+                modifier = Modifier.width(24.dp).height(24.dp)
+            )
+        } else if (painter != null) {
             Icon(
                 painter = painter,
-                contentDescription = label,
+                contentDescription = labelValue,
                 modifier = Modifier.width(24.dp).height(24.dp)
             )
         } else {
@@ -174,40 +194,39 @@ fun ColumnMenuButton(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = label,
+            text = labelValue,
             modifier = Modifier.weight(1F),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            color = MaterialTheme.colors.onSurface
         )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ColumnIconMenuButton(
+fun ColumnMenuGroup(
     modifier: Modifier = Modifier,
-    imageVector: ImageVector? = null,
-    label: String = "",
-    onClick: () -> Unit,
+    label: StringsKey = StringsKey.NONE,
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    Row(
-        modifier = modifier.onClick(onClick = onClick).defaultMinSize(minHeight = 32.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (imageVector != null) {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = label,
-                modifier = Modifier.width(24.dp).height(24.dp)
+    Column(
+        modifier = modifier.padding(all = 2.dp)
+            .background(
+                color = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
+                shape = RoundedCornerShape(8.dp)
             )
-        } else {
-            Spacer(modifier = Modifier.width(24.dp).height(24.dp))
-        }
-        Spacer(modifier = Modifier.width(8.dp))
+            .padding(horizontal = 4.dp, vertical = 4.dp),
+    ) {
+        val labelValue by rememberLanguage(label)
         Text(
-            text = label,
-            modifier = Modifier.weight(1F),
-            fontSize = 16.sp
+            text = labelValue,
+            modifier = Modifier.padding(horizontal = 8.dp),
+            fontSize = 12.sp,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7F)
         )
+        Spacer(modifier = Modifier.height(4.dp))
+        content()
     }
 }
 

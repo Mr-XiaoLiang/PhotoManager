@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lollipop.photo.data.PhotoFolder
 import com.lollipop.photo.data.PhotoManager
+import com.lollipop.photo.values.StringsKey
+import com.lollipop.photo.values.rememberLanguage
 import com.lollipop.photo.widget.ContentBox
 import com.lollipop.photo.widget.ContentMenuIcon
 
@@ -44,7 +46,7 @@ fun DrawerPanel(
         menuBar = {
             ContentMenuIcon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = "添加",
+                contentDescription = StringsKey.AddFolder,
                 onClick = {
                     PhotoManager.openFileChooser()
                 }
@@ -52,24 +54,23 @@ fun DrawerPanel(
         },
         menuPanel = null
     ) { contentTop ->
-
         if (followList.isEmpty() && defaultList.isEmpty()) {
-
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val label by rememberLanguage(StringsKey.AddFolder)
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "添加",
+                    contentDescription = label,
                     modifier = Modifier.width(64.dp)
                         .height(64.dp)
                         .onClick {
                             PhotoManager.openFileChooser()
                         }
                 )
-                Text(text = "请添加文件夹")
+                Text(text = label)
             }
 
         } else {
@@ -138,7 +139,7 @@ private fun FolderItem(folder: PhotoFolder, isSelected: Boolean, isFollow: Boole
                 } else {
                     Icons.Filled.FavoriteBorder
                 },
-                contentDescription = "Follow",
+                contentDescription = null,
                 tint = if (isFollow) {
                     Color.Red
                 } else {

@@ -34,6 +34,7 @@ import coil3.compose.SubcomposeAsyncImage
 import com.lollipop.photo.data.*
 import com.lollipop.photo.state.UiController
 import com.lollipop.photo.state.WindowStateController
+import com.lollipop.photo.values.StringsKey
 import com.lollipop.photo.widget.*
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.*
@@ -58,13 +59,13 @@ fun ContentPanel(
                 ContentMenuIcon(
                     onClick = { WindowStateController.updateDrawerExpand(false) },
                     painter = painterResource(Res.drawable.icon_left_panel_close_24),
-                    contentDescription = "CloseDrawer",
+                    contentDescription = StringsKey.CloseDrawer,
                 )
             } else {
                 ContentMenuIcon(
                     onClick = { WindowStateController.updateDrawerExpand(true) },
                     painter = painterResource(Res.drawable.icon_left_panel_open_24),
-                    contentDescription = "OpenDrawer",
+                    contentDescription = StringsKey.OpenDrawer,
                 )
             }
             if (currentFolder != null) {
@@ -75,7 +76,7 @@ fun ContentPanel(
                                 ContentMenuIcon(
                                     onClick = { PhotoManager.updateSortMode(SortMode.Downward) },
                                     painter = painterResource(Res.drawable.icon_text_up_24),
-                                    contentDescription = "TextUpward",
+                                    contentDescription = StringsKey.SortTextUpward,
                                     light = true
                                 )
                             }
@@ -84,7 +85,7 @@ fun ContentPanel(
                                 ContentMenuIcon(
                                     onClick = { PhotoManager.updateSortMode(SortMode.Upward) },
                                     painter = painterResource(Res.drawable.icon_text_down_24),
-                                    contentDescription = "TextDownward",
+                                    contentDescription = StringsKey.SortTextDownward,
                                     light = true
                                 )
                             }
@@ -92,7 +93,7 @@ fun ContentPanel(
                         ContentMenuIcon(
                             onClick = { PhotoManager.updateSortType(SortType.Time) },
                             painter = painterResource(Res.drawable.icon_clock_24),
-                            contentDescription = "TimeSort",
+                            contentDescription = StringsKey.SortByTime,
                         )
                     }
 
@@ -100,14 +101,14 @@ fun ContentPanel(
                         ContentMenuIcon(
                             onClick = { PhotoManager.updateSortType(SortType.Name) },
                             painter = painterResource(Res.drawable.icon_text_24),
-                            contentDescription = "TextSort",
+                            contentDescription = StringsKey.SortByText,
                         )
                         when (sortMode) {
                             SortMode.Upward -> {
                                 ContentMenuIcon(
                                     onClick = { PhotoManager.updateSortMode(SortMode.Downward) },
                                     painter = painterResource(Res.drawable.icon_clock_arrow_up_24),
-                                    contentDescription = "TimeUpward",
+                                    contentDescription = StringsKey.SortTimeUpward,
                                     light = true
                                 )
                             }
@@ -116,7 +117,7 @@ fun ContentPanel(
                                 ContentMenuIcon(
                                     onClick = { PhotoManager.updateSortMode(SortMode.Upward) },
                                     painter = painterResource(Res.drawable.icon_clock_arrow_down_24),
-                                    contentDescription = "TimeDownward",
+                                    contentDescription = StringsKey.SortTimeDownward,
                                     light = true
                                 )
                             }
@@ -127,13 +128,13 @@ fun ContentPanel(
                     ContentMenuIcon(
                         onClick = { UiController.updateGridMode(false) },
                         painter = painterResource(Res.drawable.icon_grid_on_24),
-                        contentDescription = "GridOn",
+                        contentDescription = StringsKey.GridOn,
                     )
                 } else {
                     ContentMenuIcon(
                         onClick = { UiController.updateGridMode(true) },
                         painter = painterResource(Res.drawable.icon_grid_off_24),
-                        contentDescription = "GridOff",
+                        contentDescription = StringsKey.GridOff,
                     )
                 }
                 ContentMenuIcon(
@@ -141,19 +142,19 @@ fun ContentPanel(
                         PhotoManager.refreshCurrentFolder()
                     },
                     imageVector = Icons.Filled.Refresh,
-                    contentDescription = "Refresh",
+                    contentDescription = StringsKey.Refresh,
                 )
                 // 展开菜单的按钮
                 ContentMenuIcon(
                     onClick = { callExpand() },
                     painter = painterResource(Res.drawable.window_action_menu_24),
-                    contentDescription = "Close",
+                    contentDescription = StringsKey.More,
                 )
             }
         },
         menuPanel = { callClose ->
             ColumnMenu(
-                modifier = Modifier.width(320.dp).padding(horizontal = 12.dp, vertical = 12.dp),
+                modifier = Modifier.width(320.dp).padding(horizontal = 6.dp, vertical = 6.dp),
             ) {
                 if (currentFolder != null) {
                     ContentDensityMenuWidget(
@@ -163,7 +164,7 @@ fun ContentPanel(
                     }
                     ColumnIconMenuButton(
                         imageVector = Icons.Filled.Delete,
-                        label = "移除文件夹记录"
+                        label = StringsKey.RemoveFolder
                     ) {
                         callClose()
                         currentFolder?.let {
@@ -171,6 +172,7 @@ fun ContentPanel(
                         }
                     }
                 }
+                AppSettings()
             }
         }
     ) { contentTop ->

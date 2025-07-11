@@ -10,10 +10,12 @@ import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.detail.PhotoDetailWindowManager
 import com.lollipop.photo.state.WindowConfig
 import com.lollipop.photo.state.WindowStateController
+import com.lollipop.photo.values.Strings
 
 fun main() = application {
 
     PhotoManager.init()
+    Strings.init()
 
     val photoDetailWindows = remember { PhotoDetailWindowManager.windows }
 

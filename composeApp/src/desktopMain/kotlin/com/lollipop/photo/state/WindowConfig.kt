@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.dp
 
 object WindowConfig {
 
-    val isUseCustomWindow = false
+    val isUseCustomWindow = mutableStateOf(true)
     val menuButtonHeight = 32.dp
     val dragAreaHeight = 32.dp
     val actionBarHeight = dragAreaHeight + 12.dp
@@ -16,6 +16,10 @@ object WindowConfig {
 
     fun updateKeepOnBackground(keepOn: Boolean) {
         keepOnBackground.value = keepOn
+    }
+
+    fun updateUseCustomWindow(use: Boolean) {
+        isUseCustomWindow.value = use
     }
 
 }

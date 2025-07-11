@@ -1,11 +1,14 @@
 package com.lollipop.photo.widget
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lollipop.photo.data.ContentDensityMode
+import com.lollipop.photo.values.StringsKey
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.*
 
@@ -15,46 +18,51 @@ fun ContentDensityMenuWidget(
     modifier: Modifier = Modifier.fillMaxWidth().height(32.dp),
     onButtonClick: (ContentDensityMode) -> Unit = {},
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    ColumnMenuGroup(
+        modifier = Modifier.fillMaxWidth(),
+        label = StringsKey.Density,
     ) {
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.Less3,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.Less2,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.Less1,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.Medium,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.More1,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.More2,
-            onButtonClick = onButtonClick,
-        )
-        DensityModeButton(
-            currentMode = currentMode,
-            targetMode = ContentDensityMode.More3,
-            onButtonClick = onButtonClick,
-        )
+        Row(
+            modifier = modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.Less3,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.Less2,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.Less1,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.Medium,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.More1,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.More2,
+                onButtonClick = onButtonClick,
+            )
+            DensityModeButton(
+                currentMode = currentMode,
+                targetMode = ContentDensityMode.More3,
+                onButtonClick = onButtonClick,
+            )
+        }
     }
 }
 
@@ -77,7 +85,7 @@ private fun DensityModeButton(
         modifier = Modifier.width(24.dp).height(24.dp),
         onClick = { onButtonClick(targetMode) },
         painter = painter,
-        contentDescription = targetMode.name,
+        contentDescription = targetMode.label,
         light = currentMode == targetMode
     )
 }

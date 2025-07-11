@@ -30,7 +30,7 @@ fun AppWindow(
     callClose: () -> Unit,
     content: @Composable (actionBarHeight: Dp) -> Unit
 ) {
-    val isUseCustomWindow = WindowConfig.isUseCustomWindow
+    val isUseCustomWindow by remember { WindowConfig.isUseCustomWindow }
     if (isUseCustomWindow) {
         CustomAppWindow(title = title, callClose = callClose, content = content)
     } else {
