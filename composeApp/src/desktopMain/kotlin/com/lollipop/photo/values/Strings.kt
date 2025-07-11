@@ -11,7 +11,7 @@ fun rememberLanguage(key: StringsKey) = remember { Strings.languageOf(key) }
 object Strings {
 
     val defaultLanguage = StringsCN
-    val currentLanguage = mutableStateOf<Language?>(null)
+    val currentLanguage = mutableStateOf<Language>(defaultLanguage)
 
     private var isInit = false
 

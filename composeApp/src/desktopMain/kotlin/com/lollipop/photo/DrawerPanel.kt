@@ -125,6 +125,7 @@ private fun FolderItem(folder: PhotoFolder, isSelected: Boolean, isFollow: Boole
                 .onClick {
                     PhotoManager.selectedFolder(folder)
                 },
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = folder.name,
@@ -133,25 +134,25 @@ private fun FolderItem(folder: PhotoFolder, isSelected: Boolean, isFollow: Boole
                 modifier = Modifier.weight(1F)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Icon(
+            ContentMenuIcon(
                 imageVector = if (isFollow) {
                     Icons.Filled.Favorite
                 } else {
                     Icons.Filled.FavoriteBorder
                 },
-                contentDescription = null,
-                tint = if (isFollow) {
-                    Color.Red
+                contentDescription = if (isFollow) {
+                    StringsKey.Follow
                 } else {
-                    MaterialTheme.colors.onBackground
+                    StringsKey.Unfollow
                 },
-                modifier = Modifier.width(24.dp).height(24.dp).onClick {
+                light = isFollow,
+                onClick = {
                     if (isFollow) {
                         PhotoManager.unfollowFolder(folder)
                     } else {
                         PhotoManager.followFolder(folder)
                     }
-                },
+                }
             )
         }
 

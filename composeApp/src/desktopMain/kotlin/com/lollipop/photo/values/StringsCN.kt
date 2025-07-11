@@ -34,6 +34,9 @@ object StringsCN : Strings.Language("简体中文") {
         StringsKey.DensityMore1 to "较大尺寸"
         StringsKey.DensityMore2 to "大尺寸"
         StringsKey.DensityMore3 to "最大尺寸"
+
+        StringsKey.Follow to "收藏"
+        StringsKey.Unfollow to "取消收藏"
     }
 
 }

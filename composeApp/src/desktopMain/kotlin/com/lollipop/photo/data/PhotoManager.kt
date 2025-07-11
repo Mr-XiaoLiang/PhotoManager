@@ -27,6 +27,7 @@ object PhotoManager {
             followFolderList.addAll(followList)
             defaultFolderList.clear()
             defaultFolderList.addAll(defaultList)
+            sortFolderList()
         }
     }
 
@@ -52,6 +53,7 @@ object PhotoManager {
         val photoFolder = PhotoFolder(dir)
         FileHelper.loadFolderInfo(photoFolder)
         defaultFolderList.add(photoFolder)
+        sortFolderList()
         selectedFolder(photoFolder)
     }
 
@@ -67,13 +69,20 @@ object PhotoManager {
     fun followFolder(folder: PhotoFolder) {
         followFolderList.add(folder)
         defaultFolderList.remove(folder)
+        sortFolderList()
         saveDirList()
     }
 
     fun unfollowFolder(folder: PhotoFolder) {
         defaultFolderList.add(folder)
         followFolderList.remove(folder)
+        sortFolderList()
         saveDirList()
+    }
+
+    private fun sortFolderList() {
+        defaultFolderList.sortBy { it.name }
+        followFolderList.sortBy { it.name }
     }
 
     fun selectedFolder(folder: PhotoFolder?) {

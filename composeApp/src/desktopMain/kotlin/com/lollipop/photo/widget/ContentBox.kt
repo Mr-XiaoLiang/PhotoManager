@@ -2,6 +2,7 @@ package com.lollipop.photo.widget
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
@@ -112,35 +113,47 @@ fun ContentMenuIcon(
     } else {
         MaterialTheme.colors.onSurface
     }
-    IconButton(
-        modifier = modifier.width(menuButtonWidth)
-            .height(menuButtonHeight),
-        onClick = onClick
+    val labelValue by rememberLanguage(contentDescription)
+    TooltipArea(
+        tooltip = {
+            Card {
+                Text(
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+                    text = labelValue
+                )
+            }
+        }
     ) {
-        if (painter != null) {
-            val labelValue by rememberLanguage(contentDescription)
-            Icon(
-                modifier = Modifier.fillMaxSize()
-                    .padding(
-                        vertical = 4.dp,
-                        horizontal = 4.dp
-                    ),
-                painter = painter,
-                contentDescription = labelValue,
-                tint = tint
-            )
-        } else if (imageVector != null) {
-            val labelValue by rememberLanguage(contentDescription)
-            Icon(
-                modifier = Modifier.fillMaxSize()
-                    .padding(
-                        vertical = 4.dp,
-                        horizontal = 4.dp
-                    ),
-                imageVector = imageVector,
-                contentDescription = labelValue,
-                tint = tint
-            )
+        IconButton(
+            modifier = modifier.width(menuButtonWidth)
+                .height(menuButtonHeight),
+            onClick = onClick
+        ) {
+            if (painter != null) {
+
+                Icon(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(
+                            vertical = 4.dp,
+                            horizontal = 4.dp
+                        ),
+                    painter = painter,
+                    contentDescription = labelValue,
+                    tint = tint
+                )
+            } else if (imageVector != null) {
+                val labelValue by rememberLanguage(contentDescription)
+                Icon(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(
+                            vertical = 4.dp,
+                            horizontal = 4.dp
+                        ),
+                    imageVector = imageVector,
+                    contentDescription = labelValue,
+                    tint = tint
+                )
+            }
         }
     }
 }

@@ -35,6 +35,9 @@ object StringsEN : Strings.Language("English") {
         StringsKey.DensityMore2 to "Density largest"
         StringsKey.DensityMore3 to "Density maximum"
 
+        StringsKey.Follow to "Follow"
+        StringsKey.Unfollow to "Unfollow"
+
     }
 
 

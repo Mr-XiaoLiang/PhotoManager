@@ -34,4 +34,7 @@ enum class StringsKey {
     DensityMore1,
     DensityMore2,
     DensityMore3,
+
+    Follow,
+    Unfollow,
 }
