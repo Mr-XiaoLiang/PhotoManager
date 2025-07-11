@@ -144,13 +144,13 @@ fun ContentPanel(
                     imageVector = Icons.Filled.Refresh,
                     contentDescription = StringsKey.Refresh,
                 )
-                // 展开菜单的按钮
-                ContentMenuIcon(
-                    onClick = { callExpand() },
-                    painter = painterResource(Res.drawable.window_action_menu_24),
-                    contentDescription = StringsKey.More,
-                )
             }
+            // 展开菜单的按钮
+            ContentMenuIcon(
+                onClick = { callExpand() },
+                painter = painterResource(Res.drawable.window_action_menu_24),
+                contentDescription = StringsKey.More,
+            )
         },
         menuPanel = { callClose ->
             ColumnMenu(

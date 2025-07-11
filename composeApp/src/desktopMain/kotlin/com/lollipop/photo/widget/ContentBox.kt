@@ -169,7 +169,7 @@ fun ColumnIconMenuButton(
     Row(
         modifier = modifier.padding(all = 2.dp)
             .background(
-                color = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
+                color = MaterialTheme.colors.secondary.copy(alpha = 0.04F),
                 shape = RoundedCornerShape(8.dp)
             ).onClick(onClick = onClick)
             .padding(vertical = 4.dp)
@@ -212,7 +212,7 @@ fun ColumnMenuGroup(
     Column(
         modifier = modifier.padding(all = 2.dp)
             .background(
-                color = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
+                color = MaterialTheme.colors.secondary.copy(alpha = 0.04F),
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(horizontal = 4.dp, vertical = 4.dp),
