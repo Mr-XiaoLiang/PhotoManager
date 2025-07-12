@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lollipop.photo.data.PhotoFolder
+import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.values.StringsKey
 import com.lollipop.photo.values.rememberLanguage

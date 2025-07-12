@@ -1,7 +1,7 @@
 package com.lollipop.photo.detail
 
 import androidx.compose.runtime.mutableStateListOf
-import com.lollipop.photo.data.Photo
+import com.lollipop.photo.data.photo.Photo
 
 object PhotoDetailWindowManager {
 

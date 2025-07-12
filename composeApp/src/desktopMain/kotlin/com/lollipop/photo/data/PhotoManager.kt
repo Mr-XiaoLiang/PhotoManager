@@ -2,6 +2,8 @@ package com.lollipop.photo.data
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.lollipop.photo.data.photo.Photo
+import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.state.WindowStateController
 import java.io.File
 
@@ -100,8 +102,8 @@ object PhotoManager {
         val folder = selectedFolder.value ?: return
         photoList.clear()
         doAsync {
-            FileHelper.loadFolderInfo(folder)
-            photoList.addAll(sortPhotoList(folder.photoList))
+            folder.load()
+            photoList.addAll(sortPhotoList(folder.photos))
         }
     }
 
@@ -123,39 +125,6 @@ object PhotoManager {
             photoList.clear()
             photoList.addAll(list)
         }
-    }
-
-    private fun sortPhotoList(list: MutableList<Photo>): List<Photo> {
-        val sortType = sortType.value
-        val sortMode = sortMode.value
-        list.sortWith { o1, o2 ->
-            when (sortType) {
-                SortType.Name -> {
-                    when (sortMode) {
-                        SortMode.Upward -> {
-                            o1.name.compareTo(o2.name)
-                        }
-
-                        SortMode.Downward -> {
-                            o2.name.compareTo(o1.name)
-                        }
-                    }
-                }
-
-                SortType.Time -> {
-                    when (sortMode) {
-                        SortMode.Upward -> {
-                            o1.main.file.lastModified().compareTo(o2.main.file.lastModified())
-                        }
-
-                        SortMode.Downward -> {
-                            o2.main.file.lastModified().compareTo(o1.main.file.lastModified())
-                        }
-                    }
-                }
-            }
-        }
-        return list
     }
 
 }

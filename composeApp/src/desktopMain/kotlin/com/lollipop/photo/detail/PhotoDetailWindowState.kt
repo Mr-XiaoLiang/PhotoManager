@@ -1,6 +1,6 @@
 package com.lollipop.photo.detail
 
-import com.lollipop.photo.data.Photo
+import com.lollipop.photo.data.photo.Photo
 
 class PhotoDetailWindowState(
     val photo: Photo,

@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.lollipop.photo.data.*
+import com.lollipop.photo.data.photo.Photo
 import com.lollipop.photo.state.UiController
 import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.values.StringsKey

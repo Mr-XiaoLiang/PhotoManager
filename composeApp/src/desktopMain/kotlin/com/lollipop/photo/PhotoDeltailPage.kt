@@ -14,7 +14,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.github.panpf.zoomimage.CoilZoomAsyncImage
-import com.lollipop.photo.data.Photo
+import com.lollipop.photo.data.photo.Photo
 import com.lollipop.photo.detail.PhotoDetailWindowState
 
 
