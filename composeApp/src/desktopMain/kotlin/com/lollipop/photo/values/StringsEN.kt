@@ -38,6 +38,8 @@ object StringsEN : Strings.Language("English") {
         StringsKey.Follow to "Follow"
         StringsKey.Unfollow to "Unfollow"
 
+        StringsKey.RecycleBin to "Recycle bin"
+
     }
 
 

@@ -12,10 +12,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,11 +33,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
-import com.lollipop.photo.data.*
+import com.lollipop.photo.data.ContentDensityMode
+import com.lollipop.photo.data.PhotoManager
+import com.lollipop.photo.data.SortMode
+import com.lollipop.photo.data.SortType
 import com.lollipop.photo.data.photo.Photo
+import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.state.UiController
 import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.values.StringsKey
+import com.lollipop.photo.values.rememberLanguage
 import com.lollipop.photo.widget.*
 import org.jetbrains.compose.resources.painterResource
 import photomanager.composeapp.generated.resources.*
@@ -178,33 +185,27 @@ fun ContentPanel(
         }
     ) { contentTop ->
         if (isGridMode) {
-            GridPhotoPanel(photoList, contentTop, contentDensityMode)
+            GridPhotoPanel(currentFolder, photoList, contentTop, contentDensityMode)
         } else {
-            ListPhotoPanel(photoList, contentTop, contentDensityMode)
+            ListPhotoPanel(currentFolder, photoList, contentTop, contentDensityMode)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: ContentDensityMode) {
-    val previewSize = when (densityMode) {
-        ContentDensityMode.Less3 -> 32.dp
-        ContentDensityMode.Less2 -> 64.dp
-        ContentDensityMode.Less1 -> 128.dp
-        ContentDensityMode.Medium -> 256.dp
-        ContentDensityMode.More1 -> 380.dp
-        ContentDensityMode.More2 -> 420.dp
-        ContentDensityMode.More3 -> 480.dp
-    }
+private fun ListPhotoPanel(
+    currentFolder: PhotoFolder?,
+    photoList: List<Photo>,
+    topInsets: Dp,
+    densityMode: ContentDensityMode
+) {
     val lines = when (densityMode) {
         ContentDensityMode.Less3 -> 1
         ContentDensityMode.Less2 -> 2
         ContentDensityMode.Less1 -> 3
         else -> Int.MAX_VALUE
     }
-    val backgroundA = MaterialTheme.colors.surface.copy(alpha = 0.05F)
-    val backgroundB = MaterialTheme.colors.primary.copy(alpha = 0.05F)
     LazyColumn {
         item(
             key = "TopSpace",
@@ -212,28 +213,19 @@ private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
             Spacer(modifier = Modifier.height(topInsets))
         }
         itemsIndexed(items = photoList, key = { _, photo -> photo.preview }) { index, photo ->
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .background(
-                        if (index % 2 == 0) {
-                            backgroundA
-                        } else {
-                            backgroundB
-                        }
-                    ).onClick(
-                        onClick = {
-                            UiController.openPhotoDetail(photo)
-                        }
-                    ).padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PhotoImage(
-                    photo = photo,
-                    modifier = Modifier.width(previewSize).height(previewSize).clip(RoundedCornerShape(8.dp)),
-                )
-                Column(
-                    modifier = Modifier.weight(1F)
-                ) {
+            ColumnItemBox(
+                densityMode = densityMode,
+                index = index,
+                onClick = {
+                    UiController.openPhotoDetail(photo)
+                },
+                photo = {
+                    PhotoImage(
+                        photo = photo,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                },
+                content = {
                     Text(
                         text = photo.name,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -255,6 +247,34 @@ private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
                         )
                     }
                 }
+            )
+        }
+        if (currentFolder != null) {
+            item {
+                val itemName by rememberLanguage(StringsKey.RecycleBin)
+                ColumnItemBox(
+                    densityMode = densityMode,
+                    index = photoList.size,
+                    onClick = {
+                        UiController.openPhotoTrash()
+                    },
+                    photo = {
+                        Icon(
+                            imageVector = Icons.Filled.FolderDelete,
+                            modifier = Modifier.fillMaxWidth(0.6F).aspectRatio(1F),
+                            contentDescription = itemName,
+                            tint = MaterialTheme.colors.onBackground.copy(alpha = 0.7F)
+                        )
+                    },
+                    content = {
+                        Text(
+                            text = itemName,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 18.sp
+                        )
+                    }
+                )
             }
         }
     }
@@ -262,7 +282,12 @@ private fun ListPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: ContentDensityMode) {
+private fun GridPhotoPanel(
+    currentFolder: PhotoFolder?,
+    photoList: List<Photo>,
+    topInsets: Dp,
+    densityMode: ContentDensityMode
+) {
     val gridMinWidth = when (densityMode) {
         ContentDensityMode.Less3 -> 128.dp
         ContentDensityMode.Less2 -> 198.dp
@@ -273,6 +298,7 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
         ContentDensityMode.More3 -> 512.dp
     }
     LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 2.dp),
         columns = GridCells.Adaptive(minSize = gridMinWidth)
     ) {
         item(
@@ -284,17 +310,10 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
             Spacer(modifier = Modifier.height(topInsets))
         }
         items(items = photoList, key = { photo -> photo.preview }) { photo ->
-            val ratio = 0.7F
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(all = 2.dp)
-                    .aspectRatio(ratio)
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colors.background)
-                    .onClick {
-                        UiController.openPhotoDetail(photo)
-                    },
-                contentAlignment = Alignment.BottomCenter
+            GridItemBox(
+                onClick = {
+                    UiController.openPhotoDetail(photo)
+                }
             ) {
                 PhotoImage(
                     photo = photo,
@@ -302,7 +321,9 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
                 )
                 Text(
                     text = photo.name,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
                         .background(color = Color.Black.copy(alpha = 0.5f))
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     color = Color.White,
@@ -325,7 +346,107 @@ private fun GridPhotoPanel(photoList: List<Photo>, topInsets: Dp, densityMode: C
                 )
             }
         }
+        if (currentFolder != null) {
+            item {
+                GridItemBox(
+                    backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
+                    onClick = {
+                        UiController.openPhotoTrash()
+                    }
+                ) {
+                    val itemName by rememberLanguage(StringsKey.RecycleBin)
+                    Icon(
+                        imageVector = Icons.Filled.FolderDelete,
+                        modifier = Modifier.fillMaxWidth(0.6F).aspectRatio(1F),
+                        contentDescription = itemName,
+                        tint = MaterialTheme.colors.onBackground.copy(alpha = 0.7F)
+                    )
+                    Text(
+                        text = itemName,
+                        modifier = Modifier.fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .background(color = Color.Black.copy(alpha = 0.5f))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        color = Color.White,
+                        style = MaterialTheme.typography.body2,
+                        maxLines = 2,
+                        textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ColumnItemBox(
+    densityMode: ContentDensityMode,
+    index: Int,
+    onClick: () -> Unit,
+    photo: @Composable BoxScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+
+    val previewSize = when (densityMode) {
+        ContentDensityMode.Less3 -> 32.dp
+        ContentDensityMode.Less2 -> 64.dp
+        ContentDensityMode.Less1 -> 128.dp
+        ContentDensityMode.Medium -> 256.dp
+        ContentDensityMode.More1 -> 380.dp
+        ContentDensityMode.More2 -> 420.dp
+        ContentDensityMode.More3 -> 480.dp
+    }
+    val backgroundA = MaterialTheme.colors.surface.copy(alpha = 0.05F)
+    val backgroundB = MaterialTheme.colors.primary.copy(alpha = 0.05F)
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .background(
+                if (index % 2 == 0) {
+                    backgroundA
+                } else {
+                    backgroundB
+                }
+            ).onClick(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.width(previewSize)
+                .height(previewSize)
+                .clip(RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            photo()
+        }
+        Column(
+            modifier = Modifier.weight(1F)
+        ) {
+            content()
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun GridItemBox(
+    backgroundColor: Color? = null,
+    onClick: () -> Unit,
+    content: @Composable BoxScope.() -> Unit
+) {
+    val ratio = 0.7F
+    val backgroundColor = backgroundColor ?: MaterialTheme.colors.background
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .padding(all = 2.dp)
+            .aspectRatio(ratio)
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(backgroundColor)
+            .onClick(onClick = onClick),
+        contentAlignment = Alignment.Center,
+        content = content
+    )
 }
 
 @Composable

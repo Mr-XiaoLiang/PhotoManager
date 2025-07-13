@@ -4,7 +4,6 @@ import com.lollipop.photo.data.photo.PhotoFolder
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.*
 import javax.swing.JFileChooser
 
 object FileHelper {
@@ -175,14 +174,13 @@ object FileHelper {
                     val dir = File(path)
                     if (dir.isDirectory && dir.exists()) {
                         val folder = PhotoFolder(dir)
-                        loadFolderInfo(folder)
+                        folder.load()
                         outList.add(folder)
                     }
                 }
             }
         }
     }
-
 
 
     fun interface PhotoFolderConfigListener {

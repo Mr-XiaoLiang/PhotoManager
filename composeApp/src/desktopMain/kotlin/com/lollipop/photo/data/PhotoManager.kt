@@ -53,7 +53,8 @@ object PhotoManager {
         val dir = File(filePath)
         directorySet.add(filePath)
         val photoFolder = PhotoFolder(dir)
-        FileHelper.loadFolderInfo(photoFolder)
+        photoFolder.load()
+        photoFolder.sort(sortType.value, sortMode.value)
         defaultFolderList.add(photoFolder)
         sortFolderList()
         selectedFolder(photoFolder)
@@ -89,21 +90,20 @@ object PhotoManager {
 
     fun selectedFolder(folder: PhotoFolder?) {
         selectedFolder.value = folder
-        photoList.clear()
-        doAsync {
-            if (folder != null) {
-                photoList.addAll(sortPhotoList(folder.photoList))
-            }
-        }
-        WindowStateController.updateTitle(folder?.path ?: "")
+        refreshCurrentFolder()
     }
 
     fun refreshCurrentFolder() {
-        val folder = selectedFolder.value ?: return
+        val folder = selectedFolder.value
+        WindowStateController.updateTitle(folder?.path ?: "")
+        if (folder == null) {
+            return
+        }
         photoList.clear()
         doAsync {
             folder.load()
-            photoList.addAll(sortPhotoList(folder.photos))
+            folder.sort(sortType.value, sortMode.value)
+            photoList.addAll(folder.photos)
         }
     }
 
@@ -121,9 +121,11 @@ object PhotoManager {
 
     private fun sortCurrentPhotoList() {
         doAsync {
-            val list = sortPhotoList(photoList.toMutableList())
             photoList.clear()
-            photoList.addAll(list)
+            selectedFolder.value?.let { folder ->
+                folder.sort(sortType.value, sortMode.value)
+                photoList.addAll(folder.photos)
+            }
         }
     }
 

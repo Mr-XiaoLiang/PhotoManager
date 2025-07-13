@@ -37,4 +37,6 @@ enum class StringsKey {
 
     Follow,
     Unfollow,
+
+    RecycleBin,
 }

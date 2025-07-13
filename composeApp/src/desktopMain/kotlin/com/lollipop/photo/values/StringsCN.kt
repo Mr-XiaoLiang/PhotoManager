@@ -37,6 +37,8 @@ object StringsCN : Strings.Language("简体中文") {
 
         StringsKey.Follow to "收藏"
         StringsKey.Unfollow to "取消收藏"
+
+        StringsKey.RecycleBin to "回收站"
     }
 
 }
