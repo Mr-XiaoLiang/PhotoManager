@@ -24,8 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.data.PhotoManager
+import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.values.StringsKey
 import com.lollipop.photo.values.rememberLanguage
 import com.lollipop.photo.widget.ContentBox
@@ -108,54 +108,55 @@ fun DrawerPanel(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FolderItem(folder: PhotoFolder, isSelected: Boolean, isFollow: Boolean) {
-
-    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .background(
-                    color = if (isSelected) {
-                        MaterialTheme.colors.background
-                    } else {
-                        Color.Transparent
+    FolderMenuBox(
+        folder = folder,
+        isFollow = isFollow
+    ) {
+        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .background(
+                        color = if (isSelected) {
+                            MaterialTheme.colors.background
+                        } else {
+                            Color.Transparent
+                        },
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .onClick {
+                        PhotoManager.selectedFolder(folder)
                     },
-                    shape = RoundedCornerShape(8.dp)
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = folder.name,
+                    color = contentColorFor(MaterialTheme.colors.onBackground),
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1F)
                 )
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .onClick {
-                    PhotoManager.selectedFolder(folder)
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = folder.name,
-                color = contentColorFor(MaterialTheme.colors.onBackground),
-                fontSize = 16.sp,
-                modifier = Modifier.weight(1F)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            ContentMenuIcon(
-                imageVector = if (isFollow) {
-                    Icons.Filled.Favorite
-                } else {
-                    Icons.Filled.FavoriteBorder
-                },
-                contentDescription = if (isFollow) {
-                    StringsKey.Follow
-                } else {
-                    StringsKey.Unfollow
-                },
-                light = isFollow,
-                onClick = {
-                    if (isFollow) {
-                        PhotoManager.unfollowFolder(folder)
+                Spacer(modifier = Modifier.width(16.dp))
+                ContentMenuIcon(
+                    imageVector = if (isFollow) {
+                        Icons.Filled.Favorite
                     } else {
-                        PhotoManager.followFolder(folder)
+                        Icons.Filled.FavoriteBorder
+                    },
+                    contentDescription = if (isFollow) {
+                        StringsKey.Follow
+                    } else {
+                        StringsKey.Unfollow
+                    },
+                    light = isFollow,
+                    onClick = {
+                        if (isFollow) {
+                            PhotoManager.unfollowFolder(folder)
+                        } else {
+                            PhotoManager.followFolder(folder)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
-
     }
-
 }

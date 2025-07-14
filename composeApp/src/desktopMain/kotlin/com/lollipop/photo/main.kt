@@ -52,5 +52,6 @@ private fun ApplicationScope.MainWindow() {
         title = titleState
     ) { actionBarHeight ->
         App(actionBarHeight)
+        RecycleBinDialog.DialogCompose()
     }
 }

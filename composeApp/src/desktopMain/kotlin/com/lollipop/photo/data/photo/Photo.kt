@@ -27,6 +27,8 @@ class Photo(
         getAllSizeDisplay()
     }
 
+    var folder: BasicPhotoFolder? = null
+
     private fun getAllSizeDisplay(): String {
         var sizeAll = main.size
         for (compatriot in compatriot) {

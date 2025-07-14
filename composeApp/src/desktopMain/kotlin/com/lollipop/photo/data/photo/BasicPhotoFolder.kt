@@ -63,6 +63,7 @@ abstract class BasicPhotoFolder(
                 }
                 if (mainPhoto != null) {
                     val element = Photo(mainPhoto)
+                    element.folder = folder
                     for (photo in photoGroup) {
                         if (photo !== mainPhoto) {
                             element.compatriot.add(photo)

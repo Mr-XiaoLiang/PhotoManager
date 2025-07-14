@@ -40,6 +40,15 @@ object StringsEN : Strings.Language("English") {
 
         StringsKey.RecycleBin to "Recycle bin"
 
+        StringsKey.RemovePhoto to "Move to recycle bin"
+        StringsKey.RestorePhoto to "Restore from Recycle Bin"
+
+        StringsKey.OpenPath to "Open"
+
+        StringsKey.HintRemoveToRecycleBin to "Move to recycle bin ?"
+
+        StringsKey.ButtonCancel to "Cancel"
+        StringsKey.ButtonConfirm to "Confirm"
     }
 
 

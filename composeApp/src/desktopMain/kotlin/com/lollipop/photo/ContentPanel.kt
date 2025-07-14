@@ -176,7 +176,7 @@ fun ContentPanel(
                     ) {
                         callClose()
                         currentFolder?.let {
-                            PhotoManager.removeFolder(it)
+
                         }
                     }
                 }
@@ -213,41 +213,43 @@ private fun ListPhotoPanel(
             Spacer(modifier = Modifier.height(topInsets))
         }
         itemsIndexed(items = photoList, key = { _, photo -> photo.preview }) { index, photo ->
-            ColumnItemBox(
-                densityMode = densityMode,
-                index = index,
-                onClick = {
-                    UiController.openPhotoDetail(photo)
-                },
-                photo = {
-                    PhotoImage(
-                        photo = photo,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                },
-                content = {
-                    Text(
-                        text = photo.name,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 18.sp
-                    )
-                    if (lines > 2) {
-                        Text(
-                            text = photo.compatriotNames,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                            fontSize = 14.sp
+            PhotoMenuBox(photo = photo) {
+                ColumnItemBox(
+                    densityMode = densityMode,
+                    index = index,
+                    onClick = {
+                        UiController.openPhotoDetail(photo)
+                    },
+                    photo = {
+                        PhotoImage(
+                            photo = photo,
+                            modifier = Modifier.fillMaxSize(),
                         )
-                    }
-                    if (lines > 1) {
+                    },
+                    content = {
                         Text(
-                            text = photo.sizeDisplay,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                            fontSize = 14.sp
+                            text = photo.name,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 18.sp
                         )
+                        if (lines > 2) {
+                            Text(
+                                text = photo.compatriotNames,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                fontSize = 14.sp
+                            )
+                        }
+                        if (lines > 1) {
+                            Text(
+                                text = photo.sizeDisplay,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                fontSize = 14.sp
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
         if (currentFolder != null) {
             item {
@@ -256,7 +258,7 @@ private fun ListPhotoPanel(
                     densityMode = densityMode,
                     index = photoList.size,
                     onClick = {
-                        UiController.openPhotoTrash()
+                        UiController.openCurrentPhotoTrash()
                     },
                     photo = {
                         Icon(
@@ -310,40 +312,42 @@ private fun GridPhotoPanel(
             Spacer(modifier = Modifier.height(topInsets))
         }
         items(items = photoList, key = { photo -> photo.preview }) { photo ->
-            GridItemBox(
-                onClick = {
-                    UiController.openPhotoDetail(photo)
+            PhotoMenuBox(photo = photo) {
+                GridItemBox(
+                    onClick = {
+                        UiController.openPhotoDetail(photo)
+                    }
+                ) {
+                    PhotoImage(
+                        photo = photo,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    Text(
+                        text = photo.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .background(color = Color.Black.copy(alpha = 0.5f))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        color = Color.White,
+                        style = MaterialTheme.typography.body2,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = photo.groupCount.toString(),
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 32.dp, minHeight = 32.dp)
+                            .align(Alignment.BottomEnd)
+                            .clip(shape = RoundedCornerShape(topStart = 8.dp))
+                            .background(color = Color.Black.copy(alpha = 0.8f))
+                            .padding(horizontal = 6.dp, vertical = 6.dp),
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.caption,
+                    )
                 }
-            ) {
-                PhotoImage(
-                    photo = photo,
-                    modifier = Modifier.fillMaxSize(),
-                )
-                Text(
-                    text = photo.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .background(color = Color.Black.copy(alpha = 0.5f))
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    color = Color.White,
-                    style = MaterialTheme.typography.body2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = photo.groupCount.toString(),
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = 32.dp, minHeight = 32.dp)
-                        .align(Alignment.BottomEnd)
-                        .clip(shape = RoundedCornerShape(topStart = 8.dp))
-                        .background(color = Color.Black.copy(alpha = 0.8f))
-                        .padding(horizontal = 6.dp, vertical = 6.dp),
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.caption,
-                )
             }
         }
         if (currentFolder != null) {
@@ -351,7 +355,7 @@ private fun GridPhotoPanel(
                 GridItemBox(
                     backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.07F),
                     onClick = {
-                        UiController.openPhotoTrash()
+                        UiController.openCurrentPhotoTrash()
                     }
                 ) {
                     val itemName by rememberLanguage(StringsKey.RecycleBin)

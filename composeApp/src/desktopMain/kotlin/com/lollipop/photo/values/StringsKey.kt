@@ -39,4 +39,14 @@ enum class StringsKey {
     Unfollow,
 
     RecycleBin,
+
+    RemovePhoto,
+    RestorePhoto,
+
+    OpenPath,
+
+    HintRemoveToRecycleBin,
+
+    ButtonCancel,
+    ButtonConfirm,
 }
