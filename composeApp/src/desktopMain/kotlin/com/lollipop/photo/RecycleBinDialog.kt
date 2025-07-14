@@ -42,10 +42,12 @@ object RecycleBinDialog {
         if (photo != null) {
             AlertDialog(
                 title = {
-                    Text(text = photo?.name ?: "")
+                    Text(text = hintMessage)
                 },
                 text = {
-                    Text(text = hintMessage)
+                    Text(
+                        text = photo?.let { "${it.name}, ${it.compatriotNames}" } ?: ""
+                    )
                 },
                 onDismissRequest = {
                     photo = null
