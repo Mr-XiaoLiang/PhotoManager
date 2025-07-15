@@ -45,7 +45,8 @@ object StringsEN : Strings.Language("English") {
 
         StringsKey.OpenPath to "Open"
 
-        StringsKey.HintRemoveToRecycleBin to "Move to recycle bin ?"
+        StringsKey.HintRemoveToRecycleBin to "Move to Recycle Bin ?"
+        StringsKey.HintRestorePhotoFromRecycleBin to "Restore from Recycle Bin ?"
 
         StringsKey.ButtonCancel to "Cancel"
         StringsKey.ButtonConfirm to "Confirm"

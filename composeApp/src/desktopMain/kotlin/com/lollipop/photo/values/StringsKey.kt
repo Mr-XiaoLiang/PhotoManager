@@ -46,6 +46,7 @@ enum class StringsKey {
     OpenPath,
 
     HintRemoveToRecycleBin,
+    HintRestorePhotoFromRecycleBin,
 
     ButtonCancel,
     ButtonConfirm,

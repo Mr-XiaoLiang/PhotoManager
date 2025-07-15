@@ -25,11 +25,25 @@ class PhotoFolder(
     }
 
     fun remove(photo: Photo, listener: PhotoRecycleBin.PhotoMoveListener, onEnd: () -> Unit) {
-        recycleBin.put(photo, listener, onEnd)
+        recycleBin.put(
+            photo,
+            listener,
+            onEnd = {
+                onEnd()
+                refresh()
+            }
+        )
     }
 
     fun restore(photo: Photo, listener: PhotoRecycleBin.PhotoMoveListener, onEnd: () -> Unit) {
-        recycleBin.takeOut(photo, listener, onEnd)
+        recycleBin.takeOut(
+            photo,
+            listener,
+            onEnd = {
+                onEnd()
+                refresh()
+            }
+        )
     }
 
 }

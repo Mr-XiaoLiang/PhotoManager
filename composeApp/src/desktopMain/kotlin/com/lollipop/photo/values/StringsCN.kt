@@ -46,6 +46,7 @@ object StringsCN : Strings.Language("简体中文") {
         StringsKey.OpenPath to "打开"
 
         StringsKey.HintRemoveToRecycleBin to "是否将此文件移入回收站？"
+        StringsKey.HintRestorePhotoFromRecycleBin to "是否将此文件从回收站移出？"
 
         StringsKey.ButtonCancel to "取消"
         StringsKey.ButtonConfirm to "确定"
