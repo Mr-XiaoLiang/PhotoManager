@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.data.photo.Photo
 import com.lollipop.photo.data.photo.PhotoFolder
 import com.lollipop.photo.data.photo.PhotoRecycleBin
@@ -25,7 +26,15 @@ import com.lollipop.photo.values.StringsKey
 import com.lollipop.photo.values.rememberLanguage
 import java.io.File
 
-object RecycleBinDialog {
+class RecycleBinDialogState(
+    val onMoveEndCallback: (PhotoFolder) -> Unit
+) {
+
+    companion object {
+        val Main = RecycleBinDialogState { folder ->
+            PhotoManager.refreshFolder(folder)
+        }
+    }
 
     private val moveState = mutableStateOf(false)
     private val moveIndex = mutableIntStateOf(-1)
@@ -35,8 +44,9 @@ object RecycleBinDialog {
     private val pendingRemovePhoto = mutableStateOf<Photo?>(null)
     private val pendingRestorePhoto = mutableStateOf<Photo?>(null)
 
-    private val onMoveEnd: () -> Unit = {
+    private val onMoveEnd: (PhotoFolder) -> Unit = { folder ->
         moveState.value = false
+        onMoveEndCallback(folder)
     }
 
     private val recycleBinListener = object : PhotoRecycleBin.PhotoMoveListener {
@@ -66,7 +76,7 @@ object RecycleBinDialog {
 
     private fun restorePhoto(photo: Photo) {
         photo.folder?.let { folder ->
-            if (folder is PhotoFolder) {
+            if (folder is PhotoRecycleBin) {
                 moveState.value = true
                 moveCount.value = photo.compatriot.size + 1
                 folder.restore(photo, recycleBinListener, onMoveEnd)

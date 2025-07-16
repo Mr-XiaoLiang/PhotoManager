@@ -2,12 +2,14 @@ package com.lollipop.photo
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.application
 import com.lollipop.photo.data.PhotoManager
 import com.lollipop.photo.detail.PhotoDetailWindowManager
+import com.lollipop.photo.recycle.RecycleBinWindowManager
 import com.lollipop.photo.state.WindowConfig
 import com.lollipop.photo.state.WindowStateController
 import com.lollipop.photo.values.Strings
@@ -18,6 +20,7 @@ fun main() = application {
     Strings.init()
 
     val photoDetailWindows = remember { PhotoDetailWindowManager.windows }
+    val recycleBinWindows = remember { RecycleBinWindowManager.windows }
 
 //    val keepOnBackground by remember { WindowConfig.keepOnBackground }
 
@@ -33,7 +36,15 @@ fun main() = application {
     MainWindow()
 
     for (window in photoDetailWindows) {
-        PhotoDetailPage(window)
+        key(window) {
+            PhotoDetailPage(window)
+        }
+    }
+
+    for (window in recycleBinWindows) {
+        key(window) {
+            RecycleBinPage(window)
+        }
     }
 
 }
@@ -52,6 +63,6 @@ private fun ApplicationScope.MainWindow() {
         title = titleState
     ) { actionBarHeight ->
         App(actionBarHeight)
-        RecycleBinDialog.DialogCompose()
+        RecycleBinDialogState.Main.DialogCompose()
     }
 }

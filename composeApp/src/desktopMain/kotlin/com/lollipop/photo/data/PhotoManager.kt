@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.lollipop.photo.data.photo.Photo
 import com.lollipop.photo.data.photo.PhotoFolder
+import com.lollipop.photo.state.UiController
 import com.lollipop.photo.state.WindowStateController
 import java.io.File
 
@@ -93,6 +94,17 @@ object PhotoManager {
         refreshCurrentFolder()
     }
 
+    fun refreshFolder(folder: PhotoFolder) {
+        if (folder == selectedFolder.value) {
+            refreshCurrentFolder()
+        } else {
+            doAsync {
+                folder.refresh()
+                UiController.updateRecycleBin(folder)
+            }
+        }
+    }
+
     fun refreshCurrentFolder() {
         val folder = selectedFolder.value
         WindowStateController.updateTitle(folder?.path ?: "")
@@ -104,6 +116,7 @@ object PhotoManager {
             folder.load()
             folder.sort(sortType.value, sortMode.value)
             photoList.addAll(folder.photos)
+            UiController.updateRecycleBin(folder)
         }
     }
 

@@ -8,7 +8,9 @@ class PhotoFolder(
     dir: File
 ) : BasicPhotoFolder(dir) {
 
-    val recycleBin = PhotoRecycleBin.create(dir)
+    val recycleBin by lazy {
+        PhotoRecycleBin.create(this)
+    }
 
     override fun load() {
         super.load()
@@ -24,24 +26,12 @@ class PhotoFolder(
         recycleBin.sort(sortType, sortMode)
     }
 
-    fun remove(photo: Photo, listener: PhotoRecycleBin.PhotoMoveListener, onEnd: () -> Unit) {
+    fun remove(photo: Photo, listener: PhotoRecycleBin.PhotoMoveListener, onEnd: (PhotoFolder) -> Unit) {
         recycleBin.put(
             photo,
             listener,
             onEnd = {
-                onEnd()
-                refresh()
-            }
-        )
-    }
-
-    fun restore(photo: Photo, listener: PhotoRecycleBin.PhotoMoveListener, onEnd: () -> Unit) {
-        recycleBin.takeOut(
-            photo,
-            listener,
-            onEnd = {
-                onEnd()
-                refresh()
+                onEnd(this)
             }
         )
     }

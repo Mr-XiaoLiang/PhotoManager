@@ -10,15 +10,16 @@ import java.util.concurrent.Executors
  * 使用方式是将准备删除的文件放到这个文件夹中，从而避免误操作
  */
 class PhotoRecycleBin(
-    private val parentFolder: File,
+    val parentFolder: PhotoFolder,
     folder: File
 ) : BasicPhotoFolder(folder) {
 
     companion object {
         const val FOLDER_NAME = "RecycleBin"
 
-        fun create(photoFolder: File): PhotoRecycleBin {
-            val folder = File(photoFolder, FOLDER_NAME)
+        fun create(photoFolder: PhotoFolder): PhotoRecycleBin {
+            val folderDir = photoFolder.dir
+            val folder = File(folderDir, FOLDER_NAME)
             if (!folder.exists()) {
                 folder.mkdirs()
             }
@@ -45,8 +46,18 @@ class PhotoRecycleBin(
         taskHandler.execute(PutTask(this, photo, listener, onEnd))
     }
 
-    fun takeOut(photo: Photo, listener: PhotoMoveListener, onEnd: () -> Unit) {
+    private fun takeOut(photo: Photo, listener: PhotoMoveListener, onEnd: () -> Unit) {
         taskHandler.execute(TakeOutTask(this, photo, listener, onEnd))
+    }
+
+    fun restore(photo: Photo, listener: PhotoMoveListener, onEnd: (PhotoFolder) -> Unit) {
+        takeOut(
+            photo,
+            listener,
+            onEnd = {
+                onEnd(parentFolder)
+            }
+        )
     }
 
     fun interface PhotoMoveListener {
@@ -158,7 +169,7 @@ class PhotoRecycleBin(
             if (srcPath.isNotEmpty()) {
                 return File(srcPath)
             }
-            return File(recycleBin.parentFolder, file.name)
+            return File(recycleBin.parentFolder.dir, file.name)
         }
 
         private fun fileMoveOutSync(photo: Photo, listener: PhotoMoveListener) {

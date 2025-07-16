@@ -32,30 +32,6 @@ fun PhotoDetailPage(state: PhotoDetailWindowState) {
 
 @Composable
 private fun PhotoDetail(actionBarHeight: Dp, photo: Photo) {
-//    val zoomState = rememberZoomState(maxScale = 10F)
-//
-//    SubcomposeAsyncImage(
-//        model = ImageRequest.Builder(LocalPlatformContext.current)
-//            .data(photo.preview)
-//            .size(coil3.size.Size.ORIGINAL)
-//            .build(),
-//        contentDescription = photo.name,
-//        loading = {
-//            Box(
-//                contentAlignment = Alignment.Center,
-//            ) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier.size(32.dp),
-//                    color = MaterialTheme.colors.primary.copy(alpha = 0.5f)
-//                )
-//            }
-//        },
-//        contentScale = ContentScale.Fit,
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .zoomable(zoomState),
-//    )
-
     var isLoading by remember { mutableStateOf(false) }
 
     Box(

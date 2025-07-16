@@ -12,34 +12,72 @@ import com.lollipop.photo.values.StringsKey
 import com.lollipop.photo.values.rememberLanguage
 
 @Composable
-fun PhotoMenuBox(
+fun PhotoMenu(
     photo: Photo,
-    content: @Composable () -> Unit
-) {
+    recycleBinDialogState: RecycleBinDialogState,
+): () -> List<ContextMenuItem> {
     val openLabel by rememberLanguage(StringsKey.OpenPath)
     val removePhotoLabel by rememberLanguage(StringsKey.RemovePhoto)
-    ContextMenuArea(
-        items = {
-            val itemList = mutableListOf<ContextMenuItem>()
-            itemList.add(
-                ContextMenuItem(openLabel) {
-                    UiController.openPath(photo.main.file)
-                }
-            )
-            itemList.add(
-                ContextMenuItem(removePhotoLabel) {
-                    UiController.removePhoto(photo)
-                }
-            )
-            photo.compatriot.forEach {
-                itemList.add(
-                    ContextMenuItem("$openLabel ${it.name}") {
-                        UiController.openPath(it.file)
-                    }
-                )
+    return {
+        val itemList = mutableListOf<ContextMenuItem>()
+        itemList.add(
+            ContextMenuItem(openLabel) {
+                UiController.openPath(photo.main.file)
             }
-            itemList
-        },
+        )
+        itemList.add(
+            ContextMenuItem(removePhotoLabel) {
+                UiController.removePhoto(photo, recycleBinDialogState)
+            }
+        )
+        photo.compatriot.forEach {
+            itemList.add(
+                ContextMenuItem("$openLabel ${it.name}") {
+                    UiController.openPath(it.file)
+                }
+            )
+        }
+        itemList
+    }
+}
+
+@Composable
+fun RecycleBinMenu(
+    photo: Photo,
+    recycleBinDialogState: RecycleBinDialogState,
+): () -> List<ContextMenuItem> {
+    val openLabel by rememberLanguage(StringsKey.OpenPath)
+    val restorePhotoLabel by rememberLanguage(StringsKey.RestorePhoto)
+    return {
+        val itemList = mutableListOf<ContextMenuItem>()
+        itemList.add(
+            ContextMenuItem(openLabel) {
+                UiController.openPath(photo.main.file)
+            }
+        )
+        itemList.add(
+            ContextMenuItem(restorePhotoLabel) {
+                UiController.restorePhoto(photo, recycleBinDialogState)
+            }
+        )
+        photo.compatriot.forEach {
+            itemList.add(
+                ContextMenuItem("$openLabel ${it.name}") {
+                    UiController.openPath(it.file)
+                }
+            )
+        }
+        itemList
+    }
+}
+
+@Composable
+fun PhotoMenuBox(
+    menuList: () -> List<ContextMenuItem>,
+    content: @Composable () -> Unit
+) {
+    ContextMenuArea(
+        items = menuList,
         content = content
     )
 }
