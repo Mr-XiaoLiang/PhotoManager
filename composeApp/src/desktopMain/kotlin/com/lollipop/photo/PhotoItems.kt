@@ -350,6 +350,7 @@ private fun PhotoImage(
     photo: Photo,
     modifier: Modifier
 ) {
+    // 为什么正式包不能加载图片呢？
     SubcomposeAsyncImage(
         model = photo.preview,
         contentDescription = photo.name,
